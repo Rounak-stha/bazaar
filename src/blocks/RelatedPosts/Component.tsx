@@ -21,7 +21,7 @@ export const RelatedPosts = (props: RelatedPostsProps) => {
 
       <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 md:gap-8">
         {docs?.map((doc, index) => {
-          if (typeof doc === "string") return null;
+          if (typeof doc === "number") return null;
 
           return <Card key={index} doc={doc} relationTo="posts" showCategories />;
         })}

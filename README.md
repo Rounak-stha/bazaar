@@ -1,10 +1,10 @@
-# Payload Ecommerce Template
+# Bazaar
 
 A modern ecommerce storefront powered by Payload and Next.js. This template provides all the essential features to build and manage a beautiful online store.
 
 ## 🌐 Live demo
 
-You can access the live demo of the template at [https://ecommerce.mandala.sh/en](https://ecommerce.mandala.sh/en).
+You can access the live demo of the template at [https://bazaar.vercel.com](https://bazaar.vercel.com).
 
 ## ✨ Features
 
@@ -16,7 +16,6 @@ You can access the live demo of the template at [https://ecommerce.mandala.sh/en
 - **SEO Friendly**: Pre-configured for search engine optimization.
 - **Multi-language**: Supports multiple languages out of the box.
 - **Payments and Shipping**: Supports payments and shipping out of the box.
-- **Customizable**: Easily extend and customize the design and functionality to fit your brand.
 
 ## 📸 Screenshots
 
@@ -35,7 +34,7 @@ Follow these steps to get your ecommerce store up and running on your local mach
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/Mandala-Software-House/payload-ecommerce-template.git
+    git clone https://github.com/rounak-stha/bazaar
     cd payload-ecommerce
     ```
 
@@ -73,4 +72,4 @@ Follow these steps to get your ecommerce store up and running on your local mach
 - **Viewing Orders**: Customer orders will appear in the 'Orders' collection in the admin panel.
 - **Customizing Pages**: You can edit pages like 'About Us' or create new ones using the 'Pages' collection.
 
-Feel free to explore the admin panel to discover all the features!
+This project started as a fork of [Payload Ecommerce Template](https://github.com/Mandala-Software-House/payload-ecommerce-template.git).

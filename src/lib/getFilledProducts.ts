@@ -1,6 +1,6 @@
 import { type Product } from "@/payload-types";
 type BaseProduct = {
-  id: string;
+  id: number;
   choosenVariantSlug?: string;
 };
 
@@ -23,7 +23,7 @@ export const getFilledProducts = <T extends CartProduct | WishlistProduct>(
         ? [
             {
               ...product,
-              image: typeof product.images[0] !== "string" ? product.images[0] : null,
+              image: typeof product.images[0] !== "number" ? product.images[0] : null,
               slug: product.slug,
               enableVariantPrices: product.enableVariantPrices,
               // eslint-disable-next-line
@@ -49,7 +49,7 @@ export const getFilledProducts = <T extends CartProduct | WishlistProduct>(
 
         return {
           ...product,
-          image: typeof product.images[0] !== "string" ? product.images[0] : null,
+          image: typeof product.images[0] !== "number" ? product.images[0] : null,
           slug: product.slug,
           enableVariantPrices: product.enableVariantPrices,
           variant: {
@@ -58,7 +58,7 @@ export const getFilledProducts = <T extends CartProduct | WishlistProduct>(
             size: product.sizes?.find((size) => size.slug === variant.size),
             slug: variant.variantSlug,
             stock: variant.stock,
-            image: typeof variant.image !== "string" ? variant.image : null,
+            image: typeof variant.image !== "number" ? variant.image : null,
             pricing: variant.pricing,
           },
           ...(isCart(item!) ? { quantity: item.quantity } : {}),

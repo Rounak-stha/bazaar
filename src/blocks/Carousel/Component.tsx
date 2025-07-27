@@ -79,11 +79,11 @@ export const CarouselBlock = ({
               key={slide.id}
               className={cn("basis-full md:basis-[50%] lg:basis-[33.33%] 2xl:basis-[25%]")}
             >
-              {typeof slide.image !== "string" && slide.image.url && (
+              {typeof slide.image !== "number" && slide.image.url && (
                 <>
                   {slide.link &&
                   (slide.link.url ||
-                    (typeof slide.link.reference?.value !== "string" && slide.link.reference?.value.slug)) ? (
+                    (typeof slide.link.reference?.value !== "number" && slide.link.reference?.value.slug)) ? (
                     <Link
                       // @ts-expect-error - reference.value is not a string! TypeScript doesn't know that, it was checked above
                       href={slide.link.url ?? `/${slide.link.reference?.value.slug}`}

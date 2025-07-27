@@ -1,4 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+/*
+  ---break---
+*/
+@custom-variant dark (&:is(.dark *));
 
 @config '../../../tailwind.config.ts';
 
@@ -51,10 +55,6 @@
     justify-content: space-between;
   }
 
-  .header.scrolled {
-    background-color: rgba(230, 234, 249, 0.5);
-  }
-
   .header.scrolled .backdrop_blur {
     backdrop-filter: blur(16px);
     z-index: -30;
@@ -101,8 +101,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 256 100% 67%;
     --primary-foreground: 210 40% 98%;
+    --primary-muted: 256 40% 95%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -192,7 +193,7 @@
     @apply border-border;
   }
   body {
-    @apply flex min-h-screen flex-col bg-background text-foreground;
+    @apply bg-background text-foreground flex min-h-screen flex-col;
   }
 }
 

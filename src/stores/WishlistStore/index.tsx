@@ -10,7 +10,7 @@ type WishListState = {
   wishlist: WishList | null;
   setWishList: (wishlistToSet: WishList | null) => void;
   toggleWishList: (wishlistToSet: WishList) => void;
-  removeFromWishList: (productId: string, variantSlug?: string) => void;
+  removeFromWishList: (productId: number, variantSlug?: string) => void;
   synchronizeWishList: () => Promise<void>;
 };
 
@@ -100,7 +100,7 @@ const useWishListStore = create<WishListState>((set) => ({
     });
   },
 
-  removeFromWishList: (productId: string, variantSlug?: string) => {
+  removeFromWishList: (productId: number, variantSlug?: string) => {
     set((state) => {
       const updatedWishList = state.wishlist?.filter((product) => {
         if (variantSlug) {

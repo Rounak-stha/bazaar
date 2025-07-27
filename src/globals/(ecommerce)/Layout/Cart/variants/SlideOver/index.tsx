@@ -59,7 +59,9 @@ export const SlideOver = () => {
             totalQuantity: number;
           };
         }>("/next/cartProducts", { cart: cartToCalculate, locale });
-        const { filledProducts = [], total = [] } = data.productsWithTotal;
+        const productsWithTotal = data.productsWithTotal;
+        const filledProducts = productsWithTotal ? productsWithTotal.filledProducts : [];
+        const total = productsWithTotal ? productsWithTotal.total : [];
         setCartProducts(filledProducts);
         setTotal(total);
       } catch (error) {
@@ -75,7 +77,7 @@ export const SlideOver = () => {
     void debouncedFetchCartProducts(cart);
   }, [cart, debouncedFetchCartProducts]);
 
-  const setCartQuantity = (quantity: number, productID: string, productVariantSlug: string | undefined) => {
+  const setCartQuantity = (quantity: number, productID: number, productVariantSlug: string | undefined) => {
     setCart([
       ...(cart?.filter((cartProduct) => cartProduct.id !== productID) ?? []),
       {
@@ -86,7 +88,7 @@ export const SlideOver = () => {
     ]);
   };
 
-  const updateCartQuantity = (delta: number, productID: string, productVariantSlug: string | undefined) => {
+  const updateCartQuantity = (delta: number, productID: number, productVariantSlug: string | undefined) => {
     updateCart([
       {
         id: productID,
@@ -228,7 +230,7 @@ export const SlideOver = () => {
                                       onClick={() => {
                                         removeFromCart(product.id, product.variant?.slug ?? undefined);
                                       }}
-                                      className="font-medium text-main-600 hover:text-main-500"
+                                      className="text-main-600 hover:text-main-500 font-medium"
                                     >
                                       {t("remove")}
                                     </button>
@@ -254,7 +256,7 @@ export const SlideOver = () => {
                     <Link
                       href="/checkout"
                       onClick={() => setCartState(false)}
-                      className="flex items-center justify-center rounded-md border border-transparent bg-main-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-main-700"
+                      className="bg-main-600 hover:bg-main-700 flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium text-white shadow-xs"
                     >
                       {t("checkout")}
                     </Link>
@@ -265,7 +267,7 @@ export const SlideOver = () => {
                       <button
                         type="button"
                         onClick={() => setCartState(false)}
-                        className="font-medium text-main-600 hover:text-main-500"
+                        className="text-main-600 hover:text-main-500 font-medium"
                       >
                         {t("continue-shopping")}
                         <span aria-hidden="true"> &rarr;</span>

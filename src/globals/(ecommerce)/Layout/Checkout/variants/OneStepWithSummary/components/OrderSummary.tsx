@@ -52,7 +52,7 @@ export const OrderSummary = ({
   const totalPriceWithShipping = mergeAmounts(totalPrice, shippingCost);
   const { cart, updateCart, setCart, removeFromCart } = useCart();
 
-  const setCartQuantity = (quantity: number, productID: string, productVariantSlug: string | undefined) => {
+  const setCartQuantity = (quantity: number, productID: number, productVariantSlug: string | undefined) => {
     setCart([
       ...(cart?.filter((cartProduct) => cartProduct.id !== productID) ?? []),
       {
@@ -63,7 +63,7 @@ export const OrderSummary = ({
     ]);
   };
 
-  const updateCartQuantity = (delta: number, productID: string, productVariantSlug: string | undefined) => {
+  const updateCartQuantity = (delta: number, productID: number, productVariantSlug: string | undefined) => {
     updateCart([
       {
         id: productID,
@@ -199,7 +199,7 @@ export const OrderSummary = ({
         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
           <button
             type="submit"
-            className="w-full rounded-md border border-transparent bg-main-600 px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-main-700 focus:outline-hidden focus:ring-2 focus:ring-main-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+            className="bg-main-600 hover:bg-main-700 focus:ring-main-500 w-full rounded-md border border-transparent px-4 py-3 text-base font-medium text-white shadow-xs focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
           >
             {t("confirm")}
           </button>

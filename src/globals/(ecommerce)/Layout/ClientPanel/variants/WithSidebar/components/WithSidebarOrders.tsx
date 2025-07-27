@@ -52,7 +52,7 @@ export const WithSidebarOrders = async () => {
               {order.products?.map((product) => {
                 const hasVariant = product.variantSlug;
                 const variantImage =
-                  typeof product.product !== "string" &&
+                  typeof product.product !== "number" &&
                   product.product &&
                   hasVariant &&
                   product.product.variants?.find((variant) => variant.variantSlug === product.variantSlug)
@@ -60,11 +60,11 @@ export const WithSidebarOrders = async () => {
 
                 const productImage =
                   product.product &&
-                  typeof product.product !== "string" &&
-                  typeof product.product.images[0] !== "string" &&
+                  typeof product.product !== "number" &&
+                  typeof product.product.images[0] !== "number" &&
                   product.product.images[0];
 
-                const image = variantImage && typeof variantImage !== "string" ? variantImage : productImage;
+                const image = variantImage && typeof variantImage !== "number" ? variantImage : productImage;
 
                 return (
                   image && (

@@ -104,6 +104,7 @@ const config: Config = {
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          muted: "hsl(var(--primary-muted))",
           foreground: "hsl(var(--primary-foreground))",
         },
         ring: "hsl(var(--ring))",
@@ -115,7 +116,7 @@ const config: Config = {
         error: "hsl(var(--error))",
         warning: "hsl(var(--warning))",
         sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
+          DEFAULT: "hsl(var(--sidebar))",
           foreground: "hsl(var(--sidebar-foreground))",
           primary: "hsl(var(--sidebar-primary))",
           "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
@@ -157,6 +158,22 @@ const config: Config = {
                 fontWeight: "normal",
                 marginBottom: "0.25em",
               },
+              h2: {
+                fontWeight: "normal",
+                marginBottom: "0.2em",
+              },
+              h3: {
+                fontWeight: "normal",
+              },
+              h4: {
+                fontWeight: "normal",
+              },
+              h5: {
+                fontWeight: "normal",
+              },
+              h6: {
+                fontWeight: "normal",
+              },
             },
           ],
         },
@@ -164,10 +181,7 @@ const config: Config = {
           css: [
             {
               h1: { fontSize: "2.5rem" },
-              h2: {
-                fontSize: "1.25rem",
-                fontWeight: 600,
-              },
+              h2: { fontSize: "1.25rem" },
             },
           ],
         },
@@ -175,7 +189,7 @@ const config: Config = {
           css: [
             {
               h1: { fontSize: "3.5rem" },
-              h2: { fontSize: "1.5rem" },
+              h2: { fontSize: "2.5rem" },
             },
           ],
         },

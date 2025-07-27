@@ -1,6 +1,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Tab, TabPanel } from "@headlessui/react";
-import { StarIcon } from "@heroicons/react/20/solid";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { StarIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { PriceClient } from "@/components/(ecommerce)/PriceClient";
@@ -31,7 +31,7 @@ export const WithImageGalleryExpandableDetails = ({
     size: product.sizes?.find((size) => size.slug === variant.size),
     slug: variant.variantSlug,
     stock: variant.stock,
-    image: typeof variant.image !== "string" ? variant.image : null,
+    image: typeof variant.image !== "number" ? variant.image : null,
     pricing: variant.pricing as
       | { value: number; currency: Currency; id?: string | null }[]
       | null
@@ -39,7 +39,9 @@ export const WithImageGalleryExpandableDetails = ({
   }));
 
   const selectedVariant =
-    filledVariants?.find((filledVariant) => filledVariant.slug === variant) ?? filledVariants?.find((variant) => variant.stock > 0) ?? filledVariants?.[0];
+    filledVariants?.find((filledVariant) => filledVariant.slug === variant) ??
+    filledVariants?.find((variant) => variant.stock > 0) ??
+    filledVariants?.[0];
 
   const maxQuantity = selectedVariant?.stock ?? product.stock ?? 999;
   const minQuantity = 1;
@@ -48,7 +50,7 @@ export const WithImageGalleryExpandableDetails = ({
 
   return (
     <div className="bg-white">
-      <div className="container mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+      <div className="container mx-auto px-4 pt-8 pb-16 sm:px-6 sm:pt-16 sm:pb-24 lg:px-8">
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
 
@@ -59,7 +61,7 @@ export const WithImageGalleryExpandableDetails = ({
             maxQuantity={maxQuantity}
             tabs={product.images.map(
               (image) =>
-                typeof image !== "string" && (
+                typeof image !== "number" && (
                   <TabPanel key={image.id}>
                     <Media
                       placeholder="empty"
@@ -72,10 +74,10 @@ export const WithImageGalleryExpandableDetails = ({
           >
             {product.images.map(
               (image) =>
-                typeof image !== "string" && (
+                typeof image !== "number" && (
                   <Tab
                     key={image.id}
-                    className="focus:ring-3 focus:outline-hidden focus:ring-main-500/50 group relative flex aspect-square cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:ring-offset-4"
+                    className="focus:ring-main-500/50 group relative flex aspect-square cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium text-gray-900 uppercase hover:bg-gray-50 focus:ring-3 focus:ring-offset-4 focus:outline-hidden"
                   >
                     <span className="sr-only">{image.alt}</span>
                     <span className="absolute inset-0 overflow-hidden rounded-md">
@@ -83,7 +85,7 @@ export const WithImageGalleryExpandableDetails = ({
                     </span>
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2 group-data-selected:ring-main-500"
+                      className="group-data-selected:ring-main-500 pointer-events-none absolute inset-0 rounded-md ring-2 ring-transparent ring-offset-2"
                     />
                   </Tab>
                 ),
@@ -159,7 +161,7 @@ export const WithImageGalleryExpandableDetails = ({
                   <Disclosure key={detail.id} as="div">
                     <h3>
                       <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
-                        <span className="text-sm font-medium text-gray-900 group-data-open:text-main-600">
+                        <span className="group-data-open:text-main-600 text-sm font-medium text-gray-900">
                           {detail.title}
                         </span>
                         <span className="ml-6 flex items-center">
@@ -169,7 +171,7 @@ export const WithImageGalleryExpandableDetails = ({
                           />
                           <MinusIcon
                             aria-hidden="true"
-                            className="hidden size-6 text-main-400 group-hover:text-main-500 group-data-open:block"
+                            className="text-main-400 group-hover:text-main-500 hidden size-6 group-data-open:block"
                           />
                         </span>
                       </DisclosureButton>

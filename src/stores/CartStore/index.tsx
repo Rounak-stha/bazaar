@@ -10,7 +10,7 @@ type CartState = {
   cart: Cart | null;
   setCart: (cartToSet: Cart | null) => void;
   updateCart: (cartToSet: Cart) => void;
-  removeFromCart: (productId: string, variantSlug?: string) => void;
+  removeFromCart: (productId: number, variantSlug?: string) => void;
   synchronizeCart: () => Promise<void>;
 };
 
@@ -99,7 +99,7 @@ const useCartStore = create<CartState>((set) => ({
     });
   },
 
-  removeFromCart: (productId: string, variantSlug?: string) => {
+  removeFromCart: (productId: number, variantSlug?: string) => {
     set((state) => {
       const updatedCart = state.cart?.filter((product) => {
         if (variantSlug) {

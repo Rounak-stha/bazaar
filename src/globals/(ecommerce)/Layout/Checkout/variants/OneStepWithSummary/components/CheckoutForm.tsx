@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Radio, RadioGroup } from "@headlessui/react";
+import { Button } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import debounce from "lodash.debounce";
@@ -27,7 +27,7 @@ import { type Currency } from "@/stores/Currency/types";
 
 import { AddNewAddressDialog } from "./AddNewAddressDialog";
 import { ChangeAddressDialog } from "./ChangeAddressDialog";
-import { DeliveryMethod } from "./DeliveryMethod";
+// import { DeliveryMethod } from "./DeliveryMethod";
 import { OrderSummary } from "./OrderSummary";
 
 export type FilledCourier = {
@@ -44,7 +44,7 @@ export type FilledCourier = {
     | undefined;
 };
 
-export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowidgetToken?: string }) => {
+export const CheckoutForm = ({ user }: { user?: Customer; geowidgetToken?: string }) => {
   const { CheckoutFormSchemaResolver } = useCheckoutFormSchema();
   const t = useTranslations("CheckoutForm.form");
   const c = useTranslations("CheckoutForm.countries");
@@ -84,7 +84,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
         pickupPointID: "",
         pickupPointAddress: "",
       },
-      deliveryMethod: "",
+      // deliveryMethod: "",
     },
   });
   const [shippingDialogOpen, setShippingDialogOpen] = useState(false);
@@ -92,7 +92,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
 
   const wantsInvoice = useWatch({ control: form.control, name: "individualInvoice" });
   const isCompany = useWatch({ control: form.control, name: "buyerType" }) === "company";
-  const selectedDelivery = useWatch({ control: form.control, name: "deliveryMethod" });
+  // const selectedDelivery = useWatch({ control: form.control, name: "deliveryMethod" });
   const shipping = useWatch({ control: form.control, name: "shipping" });
 
   const [checkoutProducts, setCheckoutProducts] = useState<ProductWithFilledVariants[]>();
@@ -102,7 +102,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
       value: number;
     }[]
   >();
-  const [deliveryMethods, setDeliveryMethods] = useState<FilledCourier[]>([]);
+  // const [deliveryMethods, setDeliveryMethods] = useState<FilledCourier[]>([]);
 
   const { cart, setCart } = useCart();
   const locale = useLocale() as Locale;
@@ -127,15 +127,14 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
             couriers: FilledCourier[];
           };
         }>("/next/checkout", { cart: cartToCalculate, selectedCountry: countryToCalculate, locale });
-        const { filledProducts, total, couriers } = data.productsWithTotalAndCouriers;
+        const { filledProducts, total } = data.productsWithTotalAndCouriers;
         setCheckoutProducts(filledProducts);
-        setDeliveryMethods(couriers);
         setTotalPrice(total);
       } catch (error) {
         console.error(error);
       }
     },
-    [locale, setCheckoutProducts, setDeliveryMethods, setTotalPrice],
+    [locale, setCheckoutProducts, setTotalPrice],
   );
 
   const debouncedFetchCartProducts = useMemo(() => debounce(fetchCartProducts, 300), [fetchCartProducts]);
@@ -147,6 +146,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
   const router = useRouter();
 
   const onSubmit = async (values: CheckoutFormData) => {
+    console.log("On Submit");
     try {
       const { data } = await axios.post<{ status: number; url?: string }>("/next/payment", {
         cart,
@@ -224,7 +224,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
 
               <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                 {shippingAddresses ? (
-                  <div className="group relative flex cursor-pointer rounded-lg border border-gray-300 border-transparent bg-white p-4 shadow-xs ring-2 ring-main-500 focus:outline-hidden">
+                  <div className="group ring-main-500 relative flex cursor-pointer rounded-lg border border-gray-300 border-transparent bg-white p-4 shadow-xs ring-2 focus:outline-hidden">
                     <span className="flex flex-1">
                       <span className="flex w-full flex-col">
                         <span className="block text-sm font-medium text-gray-900">{shipping.name}</span>
@@ -239,7 +239,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                         <Button
                           type="button"
                           onClick={() => setShippingDialogOpen(true)}
-                          className="ml-auto mt-1 text-sm text-main-600"
+                          className="text-main-600 mt-1 ml-auto text-sm"
                         >
                           {t("change")}
                         </Button>
@@ -254,7 +254,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                     control={form.control}
                     name="individualInvoice"
                     render={({ field }) => (
-                      <FormItem className="rounded-mdp-4 flex flex-row items-start space-x-3 space-y-0 sm:col-span-2">
+                      <FormItem className="rounded-mdp-4 flex flex-row items-start space-y-0 space-x-3 sm:col-span-2">
                         <FormControl>
                           <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
@@ -331,7 +331,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                           <FormControl>
                             <Select onValueChange={field.onChange} defaultValue={field.value ?? "pl"}>
                               <FormControl>
-                                <SelectTrigger className="w-full appearance-none rounded-md bg-white py-2 pr-3 text-base text-gray-900 outline-solid outline-1 -outline-offset-1 outline-gray-300 focus:outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-main-600 focus:ring-0 focus:ring-offset-0 sm:text-sm/6">
+                                <SelectTrigger className="focus:outline-main-600 w-full appearance-none rounded-md bg-white py-2 pr-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 outline-solid focus:ring-0 focus:ring-offset-0 focus:outline-2 focus:-outline-offset-2 focus:outline-solid sm:text-sm/6">
                                   <SelectValue placeholder={t("country-placeholder")} />
                                 </SelectTrigger>
                               </FormControl>
@@ -377,7 +377,7 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                 )}
               </div>
             </div>
-
+            {/*
             <div className="mt-10 border-t border-gray-200 pt-10">
               <fieldset>
                 <legend className="text-lg font-medium text-gray-900">{t("delivery-method")}</legend>
@@ -396,11 +396,11 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                           value={deliveryMethod.slug}
                           aria-label={deliveryMethod.title}
                           aria-description={`${deliveryMethod.turnaround} for price`}
-                          className="group relative flex cursor-pointer items-center rounded-lg border border-gray-300 bg-white p-4 shadow-xs focus:outline-hidden data-checked:border-transparent data-focus:ring-2 data-focus:ring-main-500"
+                          className="group data-focus:ring-main-500 relative flex cursor-pointer items-center rounded-lg border border-gray-300 bg-white p-4 shadow-xs focus:outline-hidden data-checked:border-transparent data-focus:ring-2"
                         >
                           <span
                             aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent group-data-focus:border group-data-checked:border-main-500"
+                            className="group-data-checked:border-main-500 pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent group-data-focus:border"
                           />
 
                           <DeliveryMethod geowidgetToken={geowidgetToken} deliveryMethod={deliveryMethod} />
@@ -412,12 +412,12 @@ export const CheckoutForm = ({ user, geowidgetToken }: { user?: Customer; geowid
                   )}
                 />
               </fieldset>
-            </div>
+            </div> */}
           </div>
           <OrderSummary
             products={checkoutProducts}
             totalPrice={totalPrice}
-            shippingCost={deliveryMethods.find((method) => method.slug === selectedDelivery)?.pricing}
+            // shippingCost={deliveryMethods.find((method) => method.slug === selectedDelivery)?.pricing}
             errorMessage={form.formState.errors.root?.message}
           />
         </form>

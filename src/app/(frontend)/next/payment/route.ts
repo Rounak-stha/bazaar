@@ -15,17 +15,17 @@ import { getCustomer } from "@/utilities/getCustomer";
 import { getCachedGlobal } from "@/utilities/getGlobals";
 import config from "@payload-config";
 
-const createCouriers = async (locale: Locale) => {
+/* const createCouriers = async (locale: Locale) => {
   const couriersModule = await import("@/globals/(ecommerce)/Couriers/utils/couriersConfig");
   return couriersModule.createCouriers(locale);
-};
+}; */
 
 export async function POST(req: Request) {
   try {
     const payload = await getPayload({ config });
     const {
       cart,
-      selectedCountry,
+      // selectedCountry,
       checkoutData,
       locale,
       currency,
@@ -73,6 +73,7 @@ export async function POST(req: Request) {
     const filledProducts = getFilledProducts(products, cart);
     const total = getTotal(filledProducts);
     const totalWeight = getTotalWeight(filledProducts, cart);
+    /*
     const couriers = await createCouriers(locale);
 
     const courier = couriers.find((courier) => courier?.key === checkoutData.deliveryMethod);
@@ -87,7 +88,8 @@ export async function POST(req: Request) {
 
     if (!shippingCost) {
       return Response.json({ status: 400, message: "Shipping cost not found" });
-    }
+    } */
+    const shippingCost = 0;
 
     const paywalls = await getCachedGlobal("paywalls", locale, 1)();
 
@@ -101,7 +103,7 @@ export async function POST(req: Request) {
         customer: user?.id,
         extractedFromStock: true,
         products: filledProducts.map((product) => ({
-          id: product.id,
+          id: String(product.id), // THIS IS WRONG: Product Id is not Products Arr Id
           product: product.id,
           productName: product.title,
           quantity: product.quantity ?? 0,
@@ -150,7 +152,6 @@ export async function POST(req: Request) {
           tin: checkoutData.buyerType === "company" ? checkoutData.invoice?.tin : undefined,
         },
         orderDetails: {
-          shipping: courier.key,
           shippingCost,
           status: "pending",
           total: total.find((price) => price.currency === currency)?.value ?? 0,
@@ -223,16 +224,14 @@ export async function POST(req: Request) {
       });
     }
 
-    if (courier.prepaid === false) {
+    /* if (courier.prepaid === false) {
       return Response.json({
         status: 200,
         url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/order/${order.id}`,
       });
-    }
+    } */
 
     const totalWithShipping = (total.find((price) => price.currency === currency)?.value ?? 0) + shippingCost;
-
-    console.log(paywalls.paywall);
 
     try {
       switch (paywalls.paywall) {
@@ -240,7 +239,7 @@ export async function POST(req: Request) {
           redirectURL = await getStripePaymentURL({
             filledProducts,
             shippingCost,
-            shippingLabel: courierData.settings.label,
+            shippingLabel: "No Shipping Label", // courierData.settings.label,
             currency,
             locale,
             apiKey: paywalls?.stripe?.secret ?? "",

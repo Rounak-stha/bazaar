@@ -15,7 +15,7 @@ export const getOrderProducts = async (orderProducts: Order["products"] | null, 
           const filledProduct = await payload.findByID({
             collection: "products",
             id:
-              typeof product.product === "string"
+              typeof product.product === "number"
                 ? product.product
                 : (product.product?.id ?? product.id ?? ""),
             locale,

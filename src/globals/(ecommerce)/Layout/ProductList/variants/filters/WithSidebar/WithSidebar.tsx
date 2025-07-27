@@ -49,7 +49,7 @@ export const WithSidebar = ({
     new Map(
       products
         ?.flatMap((product) => {
-          if (typeof product === "string") return [];
+          if (typeof product === "number") return [];
           return (
             product.sizes?.map((size) => ({
               value: size.slug,
@@ -66,7 +66,7 @@ export const WithSidebar = ({
     new Map(
       products
         ?.flatMap((product) => {
-          if (typeof product === "string") return [];
+          if (typeof product === "number") return [];
           return (
             product.colors?.map((color) => ({
               value: color.slug,
@@ -129,7 +129,7 @@ export const WithSidebar = ({
                     <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                       {category.subcategories.docs.map(
                         (subcategory) =>
-                          typeof subcategory !== "string" && (
+                          typeof subcategory !== "number" && (
                             <li key={subcategory.id}>
                               <Link
                                 className="block px-2 py-3"
@@ -217,7 +217,7 @@ export const WithSidebar = ({
         </MobileFiltersDialog>
 
         <main className="container mx-auto">
-          <div className="flex items-baseline justify-between gap-4 border-b border-gray-200 pt-24 pb-6">
+          <div className="flex items-baseline justify-between gap-4 border-b border-gray-200 pt-16 pb-6">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">{title}</h1>
 
             <div className="flex items-center">
@@ -255,7 +255,7 @@ export const WithSidebar = ({
                     >
                       {category.subcategories.docs.map(
                         (subcategory) =>
-                          typeof subcategory !== "string" && (
+                          typeof subcategory !== "number" && (
                             <li key={subcategory.id}>
                               <Link href={`/category/${category.slug}/${subcategory.slug}`}>
                                 {subcategory.title}

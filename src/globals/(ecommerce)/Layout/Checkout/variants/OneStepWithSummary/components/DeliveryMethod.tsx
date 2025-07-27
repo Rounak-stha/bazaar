@@ -1,4 +1,6 @@
-"use client";
+export const DeliveryMethod = () => <div>ToDo: Implement</div>;
+
+/* "use client";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -97,3 +99,4 @@ export const DeliveryMethod = ({
     </div>
   );
 };
+ */

@@ -44,30 +44,35 @@ export const ProductList = async ({
 
     const payload = await getPayload({ config });
 
+    const filter: Record<string, object>[] = [];
+
+    if (category) {
+      filter.push({
+        "categoriesArr.category": {
+          equals: category?.id,
+        },
+      });
+    }
+
+    if (subcategory) {
+      filter.push({
+        "categoriesArr.subcategories": {
+          equals: subcategory?.id,
+        },
+      });
+    }
+
     const { docs: allProducts } = await payload.find({
       collection: "products",
       depth: 2,
       locale,
-      where: {
-        or: [
-          {
-            "categoriesArr.category": {
-              equals: category?.id,
-            },
-          },
-          {
-            "categoriesArr.subcategories": {
-              equals: subcategory?.id,
-            },
-          },
-        ],
-      },
+      ...(filter.length && { where: { or: filter } }),
     });
 
     return (
       <div>
         {category && <ListingBreadcrumbs category={category} />}
-        {subcategory && typeof subcategory.category !== "string" && (
+        {subcategory && typeof subcategory.category !== "number" && (
           <ListingBreadcrumbs category={subcategory.category} subcategory={subcategory} />
         )}
         <ProductDetailsComponent

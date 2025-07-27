@@ -40,6 +40,8 @@ export const ColorSelect: TextFieldClientComponent = ({ path }) => {
     }
   }, [variantType, handleColorChange]);
 
+  if (!colors) return null;
+
   return variantType !== "sizes" ? (
     <div className="my-auto flex h-fit flex-1 flex-col gap-[5px]">
       <FieldLabel label="Kolor" />

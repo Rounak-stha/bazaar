@@ -53,7 +53,7 @@ export const Default = async ({ order, locale }: { order: Order; locale: Locale 
           )}
           <Hr style={global.hr} />
           <Section style={message}>
-            {messages?.logo && typeof messages.logo !== "string" && (
+            {messages?.logo && typeof messages.logo !== "number" && (
               <Img
                 alt={messages.logo.alt ?? ""}
                 src={`${baseUrl}${messages.logo.url ?? ""}`}
@@ -257,7 +257,7 @@ export const Default = async ({ order, locale }: { order: Order; locale: Locale 
           <Hr style={global.hr} />
           <Section style={paddingY}>
             <Row>
-              <Text style={global.heading}>Mandala</Text>
+              <Text style={global.heading}>Bazaar</Text>
             </Row>
             <Row style={categories.container}>
               <Column align="center">

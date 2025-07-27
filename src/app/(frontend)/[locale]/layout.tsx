@@ -1,7 +1,4 @@
-// eslint-disable-next-line
-import { GeistMono } from "geist/font/mono";
-// eslint-disable-next-line
-import { GeistSans } from "geist/font/sans";
+import { Mona_Sans } from "next/font/google";
 // import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
@@ -19,6 +16,15 @@ import { mergeOpenGraph } from "@/utilities/mergeOpenGraph";
 import { cn } from "src/utilities/cn";
 
 import type { Metadata } from "next";
+
+const monaSans = Mona_Sans({
+  preload: true,
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+  weight: "variable",
+  variable: "--font-mona-sans",
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -44,7 +50,7 @@ export default async function RootLayout({
 
   return (
     <html
-      className={cn(GeistSans.variable, GeistMono.variable, "twp overflow-x-clip lg:overflow-y-scroll")}
+      className={cn(monaSans.className, "twp overflow-x-clip lg:overflow-y-scroll")}
       lang={locale}
       // data-thmee="light"
       // suppressHydrationWarning

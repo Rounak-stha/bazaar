@@ -1,7 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { mongooseAdapter } from "@payloadcms/db-mongodb";
+import { postgresAdapter } from "@payloadcms/db-postgres";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 import { en } from "payload/i18n/en";
@@ -59,18 +59,19 @@ export default buildConfig({
           Component: "@/components/(ecommerce)/AdminDashboard#AdminDashboard",
         },
       },
-      beforeNavLinks: ["@/components/(ecommerce)/AdminDashboardNavLink#AdminDashboardNavLink"],
+      beforeNavLinks: ["@/components/AdminNavbar/NavHeader#AdminNavbarHeader"],
     },
     meta: {
       icons: [
         {
-          type: "image/svg+xml",
-          url: "/favicon.svg",
+          type: "image/png",
+          url: "/favicon.ico",
           rel: "icon",
         },
       ],
       title: "Admin Panel",
-      titleSuffix: "| Mandala SH",
+      titleSuffix: "| Bazaar",
+      description: "Bazaar, Your ecom buddy to help you grow",
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -110,8 +111,10 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI ?? "",
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI,
+    },
   }),
   collections: [
     Pages,
@@ -147,8 +150,9 @@ export default buildConfig({
       },
       bucket: process.env.S3_BUCKET ?? "",
       config: {
+        forcePathStyle: true,
         endpoint: process.env.S3_ENDPOINT ?? "",
-        region: "auto",
+        region: "ap-southeast-1",
         credentials: {
           accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "",
           secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "",

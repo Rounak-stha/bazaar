@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 
+import { AdminLogoIcon } from "@/components/AdminLogoIcon/AdminLogoIcon";
 import { Link } from "@/i18n/routing";
 
 import { LoginForm } from "./components/LoginForm";
@@ -11,13 +11,10 @@ export const LoginPageWithoutOAuth = ({ verified }: { verified?: string }) => {
     <main className="flex h-full flex-1 flex-col items-center justify-center bg-gray-50">
       <div className="container flex w-full flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <Image
-            alt="Mandala Software House"
-            width={125}
-            height={88}
-            src="/mandala.svg"
-            className="mx-auto -my-5 h-20 w-auto invert"
-          />
+          <div className="flex items-center justify-center gap-1">
+            <AdminLogoIcon size={60} />
+            <p className="text-4xl font-medium">Bazaar</p>
+          </div>
           <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">{t("title")}</h2>
         </div>
 

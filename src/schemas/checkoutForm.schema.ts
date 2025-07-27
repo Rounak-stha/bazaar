@@ -28,7 +28,7 @@ export const CheckoutFormSchemaServer = z.object({
     pickupPointID: z.string().optional(),
     pickupPointAddress: z.string().optional(),
   }),
-  deliveryMethod: z.string().nonempty(),
+  // deliveryMethod: z.string().nonempty(),
 });
 
 export type CheckoutFormData = z.infer<typeof CheckoutFormSchemaServer>;
@@ -63,7 +63,7 @@ export const useCheckoutFormSchema = () => {
       pickupPointID: z.string().optional(),
       pickupPointAddress: z.string().optional(),
     }),
-    deliveryMethod: z.string().nonempty(t("deliveryMethod")),
+    // deliveryMethod: z.string().nonempty(t("deliveryMethod")),
   });
 
   const RefinedCheckoutFormSchema = CheckoutFormSchema.superRefine((data, ctx) => {

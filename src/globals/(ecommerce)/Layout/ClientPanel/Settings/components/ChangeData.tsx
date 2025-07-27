@@ -20,7 +20,7 @@ export const ChangeData = ({
   text: string;
   altText: string;
   name: string;
-  userID: string;
+  userID: number;
   type?: string;
 }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -55,7 +55,7 @@ export const ChangeData = ({
             <FormItem className="flex w-full items-center">
               <FormControl>
                 <Input
-                  className="w-full border-none p-0 text-gray-900 outline-hidden ring-0 focus-within:outline-hidden focus:outline-hidden"
+                  className="w-full border-none p-0 text-gray-900 ring-0 outline-hidden focus-within:outline-hidden focus:outline-hidden"
                   type={type}
                   readOnly={!isEnabled}
                   {...field}

@@ -6,6 +6,7 @@ import {
   ClipboardList,
   FileImageIcon,
   Footprints,
+  LayoutDashboardIcon,
   LayoutTemplate,
   type LucideProps,
   Mail,
@@ -55,5 +56,7 @@ export const navIconMap: Partial<Record<CollectionSlug | GlobalSlug, ExoticCompo
   paywalls: CircleDollarSign,
 };
 
-export const getNavIcon = (slug: string) =>
-  Object.hasOwn(navIconMap, slug) ? navIconMap[slug as CollectionSlug | GlobalSlug] : undefined;
+export const getNavIcon = (slug: string) => {
+  if (slug == "") return LayoutDashboardIcon;
+  return Object.hasOwn(navIconMap, slug) ? navIconMap[slug as CollectionSlug | GlobalSlug] : undefined;
+};

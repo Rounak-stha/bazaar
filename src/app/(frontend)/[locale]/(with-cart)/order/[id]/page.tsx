@@ -11,7 +11,7 @@ import { formatPrice } from "@/utilities/formatPrices";
 import { getCachedGlobal } from "@/utilities/getGlobals";
 import { getOrderProducts } from "@/utilities/getOrderProducts";
 
-const OrdersPage = async ({ params }: { params: Promise<{ locale: Locale; id: string }> }) => {
+const OrdersPage = async ({ params }: { params: Promise<{ locale: Locale; id: number }> }) => {
   const { locale, id } = await params;
   const payload = await getPayload({ config });
   const order = await payload.findByID({

@@ -40,7 +40,7 @@ export const HotspotBlock = async ({
         depth: 2,
         where: {
           "categoriesArr.category": {
-            equals: typeof category === "string" ? category : category?.id,
+            equals: typeof category === "number" ? category : category?.id,
           },
         },
         limit: limit ?? 4,
@@ -55,7 +55,7 @@ export const HotspotBlock = async ({
         depth: 2,
         where: {
           "categoriesArr.subcategories": {
-            in: typeof subcategory === "string" ? subcategory : subcategory?.id,
+            in: typeof subcategory === "number" ? subcategory : subcategory?.id,
           },
         },
         limit: limit ?? 4,
@@ -65,7 +65,7 @@ export const HotspotBlock = async ({
       break;
     }
     case "manual": {
-      productsToShow = products?.every((product) => typeof product !== "string") ? products : [];
+      productsToShow = products?.every((product) => typeof product !== "number") ? products : [];
       break;
     }
   }

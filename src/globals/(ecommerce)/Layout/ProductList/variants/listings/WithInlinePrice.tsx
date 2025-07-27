@@ -12,7 +12,7 @@ export const WithInlinePrice = ({ products }: { products: Product[] }) => {
   return (
     <>
       {products.map((product) => {
-        if (typeof product.images[0] !== "string") {
+        if (typeof product.images[0] !== "number") {
           const priceRange = getPriceRange(product.variants, product.enableVariantPrices ?? false);
 
           let pricingComponent: ReactNode;

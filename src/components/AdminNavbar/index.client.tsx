@@ -16,7 +16,60 @@ type Props = {
   navPreferences: NavPreferences | null;
 };
 
-export const NavClient = ({ groups, navPreferences }: Props) => {
+const groups = [
+  {
+    label: "Shop",
+    entities: [
+      {
+        label: "Orders",
+        type: EntityType.collection,
+        slug: "orders",
+      },
+      {
+        label: "Products",
+        type: EntityType.collection,
+        slug: "products",
+      },
+      {
+        label: "Product Catrgories",
+        type: EntityType.collection,
+        slug: "productCategories",
+      },
+      {
+        label: "Product Sub Catrgories",
+        type: EntityType.collection,
+        slug: "productSubCategories",
+      },
+    ],
+  },
+  {
+    label: "System",
+    entities: [
+      {
+        label: "Pages",
+        type: EntityType.collection,
+        slug: "pages",
+      },
+      {
+        label: "Header",
+        type: EntityType.global,
+        slug: "header",
+      },
+      {
+        label: "Footer",
+        type: EntityType.global,
+        slug: "footer",
+      },
+      {
+        label: "Media",
+        type: EntityType.collection,
+        slug: "media",
+      },
+    ],
+  },
+];
+
+export const NavClient = ({ navPreferences }: Props) => {
   const pathname = usePathname();
 
   const {
@@ -54,7 +107,7 @@ export const NavClient = ({ groups, navPreferences }: Props) => {
 
               return (
                 <LinkElement
-                  className={[`${baseClass}__link twp flex items-center py-2`, activeCollection && `active`]
+                  className={[`${baseClass}__link twp flex items-center py-4`, activeCollection && `active`]
                     .filter(Boolean)
                     .join(" ")}
                   href={href}

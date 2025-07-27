@@ -122,7 +122,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   globals: {
     header: Header;
@@ -208,7 +208,7 @@ export interface CustomerAuthOperations {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: string;
+  id: number;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -235,11 +235,11 @@ export interface Page {
             reference?:
               | ({
                   relationTo: 'pages';
-                  value: string | Page;
+                  value: number | Page;
                 } | null)
               | ({
                   relationTo: 'posts';
-                  value: string | Post;
+                  value: number | Post;
                 } | null);
             url?: string | null;
             label: string;
@@ -251,7 +251,7 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
-    media?: (string | null) | Media;
+    media?: (number | null) | Media;
     reversed?: boolean | null;
   };
   layout: (
@@ -269,7 +269,7 @@ export interface Page {
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
@@ -284,9 +284,9 @@ export interface Page {
  * via the `definition` "posts".
  */
 export interface Post {
-  id: string;
+  id: number;
   title: string;
-  heroImage?: (string | null) | Media;
+  heroImage?: (number | null) | Media;
   content: {
     root: {
       type: string;
@@ -302,18 +302,18 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  relatedPosts?: (string | Post)[] | null;
-  categories?: (string | Category)[] | null;
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | Administrator)[] | null;
+  authors?: (number | Administrator)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -331,7 +331,7 @@ export interface Post {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   caption?: {
     root: {
@@ -423,12 +423,12 @@ export interface Media {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: string;
+  id: number;
   title: string;
-  parent?: (string | null) | Category;
+  parent?: (number | null) | Category;
   breadcrumbs?:
     | {
-        doc?: (string | null) | Category;
+        doc?: (number | null) | Category;
         url?: string | null;
         label?: string | null;
         id?: string | null;
@@ -442,7 +442,7 @@ export interface Category {
  * via the `definition` "administrators".
  */
 export interface Administrator {
-  id: string;
+  id: number;
   name?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -490,11 +490,11 @@ export interface CallToActionBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -547,11 +547,11 @@ export interface ContentBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -641,7 +641,7 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
-  media: string | Media;
+  media: number | Media;
   spacingBottom?: ('none' | 'small' | 'medium' | 'large') | null;
   spacingTop?: ('none' | 'small' | 'medium' | 'large') | null;
   paddingBottom?: ('none' | 'small' | 'medium' | 'large') | null;
@@ -672,12 +672,12 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'posts' | null;
-  categories?: (string | Category)[] | null;
+  categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
     | {
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       }[]
     | null;
   id?: string | null;
@@ -689,7 +689,7 @@ export interface ArchiveBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
-  form: string | Form;
+  form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
     root: {
@@ -715,7 +715,7 @@ export interface FormBlock {
  * via the `definition` "forms".
  */
 export interface Form {
-  id: string;
+  id: number;
   title: string;
   fields?:
     | (
@@ -907,7 +907,7 @@ export interface CarouselBlock {
   } | null;
   slides?:
     | {
-        image: string | Media;
+        image: number | Media;
         enableLink?: boolean | null;
         link?: {
           type?: ('reference' | 'custom') | null;
@@ -915,11 +915,11 @@ export interface CarouselBlock {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -1009,8 +1009,8 @@ export interface HotspotBlock {
   } | null;
   type: 'category' | 'subcategory' | 'manual';
   appearance: 'default' | 'slider' | 'sliderLoop';
-  category?: (string | null) | ProductCategory;
-  subcategory?: (string | null) | ProductSubCategory;
+  category?: (number | null) | ProductCategory;
+  subcategory?: (number | null) | ProductSubCategory;
   /**
    * Sort is applied only when type is set to 'category' or 'subcategory', in manual mode you can manually sort products in the list
    */
@@ -1026,7 +1026,7 @@ export interface HotspotBlock {
   /**
    * Products order will be the same as the order of selection
    */
-  products?: (string | Product)[] | null;
+  products?: (number | Product)[] | null;
   limit?: number | null;
   spacingBottom?: ('none' | 'small' | 'medium' | 'large') | null;
   spacingTop?: ('none' | 'small' | 'medium' | 'large') | null;
@@ -1041,17 +1041,17 @@ export interface HotspotBlock {
  * via the `definition` "productCategories".
  */
 export interface ProductCategory {
-  id: string;
+  id: number;
   title: string;
   slug?: string | null;
   slugLock?: boolean | null;
   subcategories?: {
-    docs?: (string | ProductSubCategory)[];
+    docs?: (number | ProductSubCategory)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
   products?: {
-    docs?: (string | Product)[];
+    docs?: (number | Product)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1063,13 +1063,13 @@ export interface ProductCategory {
  * via the `definition` "productSubCategories".
  */
 export interface ProductSubCategory {
-  id: string;
-  category: string | ProductCategory;
+  id: number;
+  category: number | ProductCategory;
   title: string;
   slug?: string | null;
   slugLock?: boolean | null;
   products?: {
-    docs?: (string | Product)[];
+    docs?: (number | Product)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1081,7 +1081,7 @@ export interface ProductSubCategory {
  * via the `definition` "products".
  */
 export interface Product {
-  id: string;
+  id: number;
   title: string;
   slug?: string | null;
   slugLock?: boolean | null;
@@ -1103,7 +1103,7 @@ export interface Product {
   /**
    * If you have variants, first image will be variant image.
    */
-  images: (string | Media)[];
+  images: (number | Media)[];
   details?:
     | {
         title: string;
@@ -1155,7 +1155,7 @@ export interface Product {
         size?: string | null;
         color?: string | null;
         variantSlug?: string | null;
-        image?: (string | null) | Media;
+        image?: (number | null) | Media;
         /**
          * Define stock for this variant. A stock of 0 disables checkout for this variant.
          */
@@ -1176,8 +1176,8 @@ export interface Product {
     | null;
   categoriesArr?:
     | {
-        category: string | ProductCategory;
-        subcategories?: (string | ProductSubCategory)[] | null;
+        category: number | ProductCategory;
+        subcategories?: (number | ProductSubCategory)[] | null;
         id?: string | null;
       }[]
     | null;
@@ -1206,7 +1206,7 @@ export interface Product {
  * via the `definition` "customers".
  */
 export interface Customer {
-  id: string;
+  id: number;
   fullName?: string | null;
   firstName?: string | null;
   lastName?: string | null;
@@ -1320,12 +1320,12 @@ export interface Customer {
  */
 export interface Order {
   id: string;
-  customer?: (string | null) | Customer;
+  customer?: (number | null) | Customer;
   date?: string | null;
   extractedFromStock?: boolean | null;
   products?:
     | {
-        product?: (string | null) | Product;
+        product?: (number | null) | Product;
         productName?: string | null;
         isFromAPI: boolean;
         color?: string | null;
@@ -1482,9 +1482,9 @@ export interface Order {
  * via the `definition` "productReviews".
  */
 export interface ProductReview {
-  id: string;
-  product: string | Product;
-  author: string | Customer;
+  id: number;
+  product: number | Product;
+  author: number | Customer;
   rating: number;
   review?: {
     root: {
@@ -1509,7 +1509,7 @@ export interface ProductReview {
  * via the `definition` "redirects".
  */
 export interface Redirect {
-  id: string;
+  id: number;
   /**
    * You will need to rebuild the website when changing this field.
    */
@@ -1519,11 +1519,11 @@ export interface Redirect {
     reference?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null);
     url?: string | null;
   };
@@ -1535,8 +1535,8 @@ export interface Redirect {
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
-  id: string;
-  form: string | Form;
+  id: number;
+  form: number | Form;
   submissionData?:
     | {
         field: string;
@@ -1554,18 +1554,18 @@ export interface FormSubmission {
  * via the `definition` "search".
  */
 export interface Search {
-  id: string;
+  id: number;
   title?: string | null;
   priority?: number | null;
   doc: {
     relationTo: 'posts';
-    value: string | Post;
+    value: number | Post;
   };
   slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
-    image?: (string | null) | Media;
+    image?: (number | null) | Media;
   };
   categories?:
     | {
@@ -1582,7 +1582,7 @@ export interface Search {
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
-  id: string;
+  id: number;
   /**
    * Input data provided to the job
    */
@@ -1674,31 +1674,31 @@ export interface PayloadJob {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'pages';
-        value: string | Page;
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'posts';
-        value: string | Post;
+        value: number | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
-        value: string | Category;
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'administrators';
-        value: string | Administrator;
+        value: number | Administrator;
       } | null)
     | ({
         relationTo: 'customers';
-        value: string | Customer;
+        value: number | Customer;
       } | null)
     | ({
         relationTo: 'orders';
@@ -1706,49 +1706,49 @@ export interface PayloadLockedDocument {
       } | null)
     | ({
         relationTo: 'products';
-        value: string | Product;
+        value: number | Product;
       } | null)
     | ({
         relationTo: 'productCategories';
-        value: string | ProductCategory;
+        value: number | ProductCategory;
       } | null)
     | ({
         relationTo: 'productSubCategories';
-        value: string | ProductSubCategory;
+        value: number | ProductSubCategory;
       } | null)
     | ({
         relationTo: 'productReviews';
-        value: string | ProductReview;
+        value: number | ProductReview;
       } | null)
     | ({
         relationTo: 'redirects';
-        value: string | Redirect;
+        value: number | Redirect;
       } | null)
     | ({
         relationTo: 'forms';
-        value: string | Form;
+        value: number | Form;
       } | null)
     | ({
         relationTo: 'form-submissions';
-        value: string | FormSubmission;
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
-        value: string | Search;
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-jobs';
-        value: string | PayloadJob;
+        value: number | PayloadJob;
       } | null);
   globalSlug?: string | null;
   user:
     | {
         relationTo: 'administrators';
-        value: string | Administrator;
+        value: number | Administrator;
       }
     | {
         relationTo: 'customers';
-        value: string | Customer;
+        value: number | Customer;
       };
   updatedAt: string;
   createdAt: string;
@@ -1758,15 +1758,15 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user:
     | {
         relationTo: 'administrators';
-        value: string | Administrator;
+        value: number | Administrator;
       }
     | {
         relationTo: 'customers';
-        value: string | Customer;
+        value: number | Customer;
       };
   key?: string | null;
   value?:
@@ -1786,7 +1786,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -2689,7 +2689,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "header".
  */
 export interface Header {
-  id: string;
+  id: number;
   navItems?:
     | {
         link: {
@@ -2698,11 +2698,11 @@ export interface Header {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -2711,7 +2711,7 @@ export interface Header {
       }[]
     | null;
   type: 'default' | 'floating';
-  logo?: (string | null) | Media;
+  logo?: (number | null) | Media;
   hideOnScroll?: boolean | null;
   background?: string | null;
   updatedAt?: string | null;
@@ -2722,7 +2722,7 @@ export interface Header {
  * via the `definition` "footer".
  */
 export interface Footer {
-  id: string;
+  id: number;
   attribution?: {
     root: {
       type: string;
@@ -2746,11 +2746,11 @@ export interface Footer {
           reference?:
             | ({
                 relationTo: 'pages';
-                value: string | Page;
+                value: number | Page;
               } | null)
             | ({
                 relationTo: 'posts';
-                value: string | Post;
+                value: number | Post;
               } | null);
           url?: string | null;
           label: string;
@@ -2766,7 +2766,7 @@ export interface Footer {
  * via the `definition` "emailMessages".
  */
 export interface EmailMessage {
-  id: string;
+  id: number;
   smtp: {
     host: string;
     port: number;
@@ -2776,7 +2776,7 @@ export interface EmailMessage {
     fromEmail: string;
   };
   messages: {
-    logo?: (string | null) | Media;
+    logo?: (number | null) | Media;
     additionalText?: string | null;
     template: 'default';
   };
@@ -2788,7 +2788,7 @@ export interface EmailMessage {
  * via the `definition` "shopSettings".
  */
 export interface ShopSetting {
-  id: string;
+  id: number;
   /**
    * First currency is the default one
    */
@@ -2809,7 +2809,7 @@ export interface ShopSetting {
  * via the `definition` "shopLayout".
  */
 export interface ShopLayout {
-  id: string;
+  id: number;
   productDetails: {
     type: 'WithImageGalleryExpandableDetails';
     reviewsEnabled: boolean;
@@ -2852,7 +2852,7 @@ export interface ShopLayout {
  * via the `definition` "inpost-pickup".
  */
 export interface InpostPickup {
-  id: string;
+  id: number;
   enabled?: boolean | null;
   settings: {
     label: string;
@@ -2932,7 +2932,7 @@ export interface InpostPickup {
         id?: string | null;
       }[]
     | null;
-  icon?: (string | null) | Media;
+  icon?: (number | null) | Media;
   clientId?: string | null;
   /**
    * Remember to pass matching keys for choosen environment
@@ -2948,7 +2948,7 @@ export interface InpostPickup {
  * via the `definition` "inpost-courier".
  */
 export interface InpostCourier {
-  id: string;
+  id: number;
   enabled?: boolean | null;
   settings: {
     label: string;
@@ -3028,7 +3028,7 @@ export interface InpostCourier {
         id?: string | null;
       }[]
     | null;
-  icon?: (string | null) | Media;
+  icon?: (number | null) | Media;
   clientId?: string | null;
   /**
    * Remember to pass matching keys for choosen environment
@@ -3043,7 +3043,7 @@ export interface InpostCourier {
  * via the `definition` "inpost-courier-cod".
  */
 export interface InpostCourierCod {
-  id: string;
+  id: number;
   enabled?: boolean | null;
   settings: {
     label: string;
@@ -3123,7 +3123,7 @@ export interface InpostCourierCod {
         id?: string | null;
       }[]
     | null;
-  icon?: (string | null) | Media;
+  icon?: (number | null) | Media;
   clientId?: string | null;
   /**
    * Remember to pass matching keys for choosen environment
@@ -3138,7 +3138,7 @@ export interface InpostCourierCod {
  * via the `definition` "paywalls".
  */
 export interface Paywall {
-  id: string;
+  id: number;
   paywall: 'stripe' | 'autopay' | 'p24';
   /**
    * If you want to use test environment, you can also provide test keys here.
@@ -3173,7 +3173,7 @@ export interface Paywall {
  * via the `definition` "fulfilment".
  */
 export interface Fulfilment {
-  id: string;
+  id: number;
   shopAddress: {
     name: string;
     address: string;
@@ -3574,18 +3574,18 @@ export interface TaskSchedulePublish {
     doc?:
       | ({
           relationTo: 'pages';
-          value: string | Page;
+          value: number | Page;
         } | null)
       | ({
           relationTo: 'posts';
-          value: string | Post;
+          value: number | Post;
         } | null)
       | ({
           relationTo: 'products';
-          value: string | Product;
+          value: number | Product;
         } | null);
     global?: string | null;
-    user?: (string | null) | Administrator;
+    user?: (number | null) | Administrator;
   };
   output?: unknown;
 }
