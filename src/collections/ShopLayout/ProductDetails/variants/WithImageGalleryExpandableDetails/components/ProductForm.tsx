@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 
 import { QuantityInput } from '@/components/(storefront)/QuantityInput'
 import { type Product } from '@/payload-types'
-import { useCart } from '@/stores/CartStore'
+import { convertToCartProduct, useCart } from '@/stores/CartStore'
 import { useWishList } from '@/stores/WishlistStore'
 import { cn } from '@/utilities/ui'
 import { Button } from '@/components/ui/button'
@@ -124,7 +124,6 @@ export const ProductForm = ({
 
   // When the selected variant changes externally (URL or prop), align internal state.
   useEffect(() => {
-    console.log('Use Effect to set variant')
     const nextVariant =
       variants.find((v) => (v.id ?? v.sku) === variantFromQuery) ??
       variants.find((v) => v.stock > 0) ??
@@ -144,7 +143,6 @@ export const ProductForm = ({
   const [quantity, setQuantity] = useState<number>(minQuantity)
   const maxQuantity = currentVariant?.stock ?? 999
   useEffect(() => {
-    console.log('Use Effect to set quantity')
     if (quantity > maxQuantity) setQuantity(maxQuantity)
     if (quantity < minQuantity) setQuantity(minQuantity)
   }, [maxQuantity, minQuantity])
@@ -154,7 +152,6 @@ export const ProductForm = ({
   const [overStock, setOverStock] = useState(false)
 
   useEffect(() => {
-    console.log('Use Effect to set stock')
     setOverStock(false)
   }, [cart, currentVariant])
 
@@ -184,9 +181,7 @@ export const ProductForm = ({
   const isProductAvailable = Boolean(currentVariant && currentVariant.stock > 0)
 
   const cartItem = cart?.find(
-    (item) =>
-      item.id === product.id &&
-      item.choosenVariantSlug === (currentVariant?.id ?? currentVariant?.sku),
+    (item) => item.id === product.id && item.variant.id === currentVariant?.id,
   )
 
   return (
@@ -240,7 +235,7 @@ export const ProductForm = ({
       <div className="mt-10 grid grid-cols-2 gap-y-4 sm:flex">
         <Button
           type="submit"
-          disabled={!isProductAvailable}
+          disabled={!isProductAvailable || overStock}
           className={cn(
             'h-full col-span-2 row-start-2 flex max-w-xs flex-1 items-center justify-center px-8 py-3 text-base font-medium sm:w-full',
             !isProductAvailable && 'cursor-not-allowed opacity-25',
@@ -251,14 +246,7 @@ export const ProductForm = ({
             const currentInCart = cartItem?.quantity ?? 0
             if (quantity <= maxQuantity - currentInCart) {
               setOverStock(false)
-              updateCart([
-                {
-                  id: product.id,
-                  quantity,
-                  // keeping the same key your stores expect:
-                  choosenVariantSlug: (currentVariant.id ?? currentVariant.sku) as string,
-                },
-              ])
+              updateCart([convertToCartProduct(product, currentVariant, quantity)])
             } else {
               setOverStock(true)
             }
@@ -271,7 +259,6 @@ export const ProductForm = ({
           <QuantityInput
             maxQuantity={maxQuantity}
             minQuantity={minQuantity}
-            setQuantity={setQuantity}
             updateQuantity={(delta) => setQuantity((q) => q + delta)}
             quantity={quantity}
           />

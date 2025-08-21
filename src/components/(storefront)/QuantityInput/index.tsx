@@ -7,14 +7,12 @@ export const QuantityInput = ({
   minQuantity,
   maxQuantity,
   quantity,
-  setQuantity,
   updateQuantity,
   inputVariant = 'default',
 }: {
   minQuantity: number
   maxQuantity: number
   quantity: number
-  setQuantity: (quantity: number) => void
   updateQuantity: (delta: number) => void
   inputVariant?: 'default' | 'cart'
 }) => {
@@ -49,35 +47,14 @@ export const QuantityInput = ({
       >
         <MinusIcon width={20} height={20} />
       </button>
-      <Input
-        type="number"
+      <p
         className={cn(
           `mx-auto h-full w-full min-w-10 max-w-16 p-2 text-center outline-hidden [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`,
           inputVariant === 'cart' && 'p-1',
         )}
-        value={quantity}
-        min={1}
-        max={maxQuantity}
-        onKeyDown={(e) => {
-          const key = e.key
-
-          const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab']
-
-          if (!/^[0-9]$/.test(key) && !allowedKeys.includes(key)) {
-            e.preventDefault()
-          }
-        }}
-        onChange={(e) => {
-          const quantityFromInput = Number(e.target.value)
-          if (quantityFromInput > maxQuantity) {
-            setQuantity(maxQuantity)
-          } else if (quantityFromInput < minQuantity) {
-            setQuantity(minQuantity)
-          } else {
-            setQuantity(quantityFromInput)
-          }
-        }}
-      />
+      >
+        {quantity}
+      </p>
       <button
         className={cn(
           'cursor-pointer p-2',

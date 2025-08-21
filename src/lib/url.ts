@@ -26,3 +26,7 @@ export function extractSubdomain(request: NextRequest): string | null {
   const isSubdomain = hostname !== RootDomainFormatted && !hostname.startsWith('www.')
   return isSubdomain ? hostname.split('.')[0] : null
 }
+
+export const Paths = {
+  cartProducts: (shopDomain: string) => `/api/cart/products`,
+}

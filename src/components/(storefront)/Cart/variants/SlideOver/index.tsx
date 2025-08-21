@@ -4,21 +4,23 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
 
 import { useCartState } from '@/stores/CartStateStore'
+import { CartContents } from '../content'
 
 export const SlideOver = () => {
   const { isOpen, toggleCart } = useCartState()
   return (
     <Sheet open={isOpen} onOpenChange={toggleCart}>
-      <SheetContent>
+      <SheetContent className="flex flex-col">
         <SheetHeader>
           <SheetTitle>Cart</SheetTitle>
-          <SheetDescription>Here goes all items in cart</SheetDescription>
         </SheetHeader>
+        <CartContents toggleCart={toggleCart} />
       </SheetContent>
     </Sheet>
   )

@@ -22,11 +22,15 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     *
+     * NOTE: api (API routes) are also matched here
+     * So every API request for each shop will also be rewritten to the shop/[domain] path
+     * Since the admin panel also has this api route, this will also be routed through this middleware
+     * But for admin panel, we're not using any subdomains, so there won't be any rewrites
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 }

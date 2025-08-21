@@ -10,9 +10,10 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 
 import { getServerSideURL } from '@/utilities/getURL'
-import { Cart } from '@/components/Cart/Component'
+import { Cart } from '@/components/(storefront)/Cart/Component'
 import { WishList } from '@/components/WishList/Component'
 import { getCachedShopByDomain } from '@/utilities/shop/getShop'
+import { ShopProvider } from '@/components/(storefront)/context/shop'
 
 type RootLayoutProps = {
   params: Promise<{ domain: string }>
@@ -28,17 +29,19 @@ export default async function RootLayout({ params, children }: RootLayoutProps) 
 
   return (
     <Providers>
-      <AdminBar
-        adminBarProps={{
-          preview: isEnabled,
-        }}
-      />
+      <ShopProvider shop={shop}>
+        <AdminBar
+          adminBarProps={{
+            preview: isEnabled,
+          }}
+        />
 
-      <Header shop={shop} />
-      <Cart />
-      <WishList />
-      {children}
-      <Footer shop={shop} />
+        <Header shop={shop} />
+        <Cart />
+        <WishList />
+        {children}
+        <Footer shop={shop} />
+      </ShopProvider>
     </Providers>
   )
 }
