@@ -100,18 +100,22 @@ export const Products: CollectionConfig = {
                   type: 'relationship',
                   relationTo: 'productOptions',
                   required: true,
-                  maxDepth: 1,
                   admin: {
                     components: {
                       Field:
                         '@/collections/Products/components/ProductOptionTypeSelect#ProductOptionTypeSelect',
                     },
                   },
-                  filterOptions: ({ data }) => {
+                  filterOptions: ({ data, siblingData }) => {
                     const options = data.options as Product['options']
+                    const currentTypeId = (
+                      siblingData as NonNullable<Product['options']>[number] | null
+                    )?.type // id of the current row
                     return {
                       id: {
-                        not_in: (options?.map((option) => option.type) || []).filter(Boolean),
+                        not_in: (options?.map((option) => option.type) || [])
+                          .filter(Boolean)
+                          .filter((id) => id !== currentTypeId),
                       },
                     }
                   },
@@ -254,7 +258,6 @@ export const Products: CollectionConfig = {
               admin: {
                 description:
                   'All product attributes must be set through variants. If the product has only one variant, define it here as the default variant.',
-                readOnly: true,
               },
               required: true,
               minRows: 1,

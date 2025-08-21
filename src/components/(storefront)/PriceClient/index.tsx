@@ -9,13 +9,10 @@ export const PriceClient = ({
   pricing: {
     value: number
     currency: string
-  }[]
+  }
 }) => {
   const { currency } = useCurrency()
-  const price =
-    pricing.length > 0
-      ? (pricing.find((price) => price.currency === currency)?.value ?? pricing[0].value)
-      : 0
+  const price = pricing.value
 
   return <>{formatPrice(price, currency)}</>
 }

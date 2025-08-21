@@ -81,6 +81,10 @@ export interface Config {
     products: Product;
     shops: Shop;
     users: User;
+    header: Header;
+    footer: Footer;
+    shopLayout: ShopLayout;
+    shopSettings: ShopSetting;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -112,6 +116,10 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+    shopLayout: ShopLayoutSelect<false> | ShopLayoutSelect<true>;
+    shopSettings: ShopSettingsSelect<false> | ShopSettingsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -124,20 +132,8 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {
-    header: Header;
-    footer: Footer;
-    imageSettings: ImageSetting;
-    shopLayout: ShopLayout;
-    shopSettings: ShopSetting;
-  };
-  globalsSelect: {
-    header: HeaderSelect<false> | HeaderSelect<true>;
-    footer: FooterSelect<false> | FooterSelect<true>;
-    imageSettings: ImageSettingsSelect<false> | ImageSettingsSelect<true>;
-    shopLayout: ShopLayoutSelect<false> | ShopLayoutSelect<true>;
-    shopSettings: ShopSettingsSelect<false> | ShopSettingsSelect<true>;
-  };
+  globals: {};
+  globalsSelect: {};
   locale: null;
   user:
     | (Customer & {
@@ -1060,6 +1056,124 @@ export interface ProductCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: string;
+  shop?: (string | null) | Shop;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  shop?: (string | null) | Shop;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shopLayout".
+ */
+export interface ShopLayout {
+  id: string;
+  shop?: (string | null) | Shop;
+  productDetails: {
+    type: 'WithImageGalleryExpandableDetails';
+    reviewsEnabled: boolean;
+  };
+  productList: {
+    filters: 'none' | 'withSidebar' | 'sortOnly';
+  };
+  cartAndWishlist: {
+    type: 'slideOver';
+  };
+  checkout: {
+    type: 'OneStepWithSummary';
+  };
+  clientPanel: {
+    type: 'withSidebar';
+    help: {
+      title: string;
+      content: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      };
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shopSettings".
+ */
+export interface ShopSetting {
+  id: string;
+  shop?: (string | null) | Shop;
+  /**
+   * Supported currencies by your shop
+   */
+  availableCurrencies: 'NPR'[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1282,6 +1396,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'header';
+        value: string | Header;
+      } | null)
+    | ({
+        relationTo: 'footer';
+        value: string | Footer;
+      } | null)
+    | ({
+        relationTo: 'shopLayout';
+        value: string | ShopLayout;
+      } | null)
+    | ({
+        relationTo: 'shopSettings';
+        value: string | ShopSetting;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1819,6 +1949,103 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  shop?: T;
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  shop?: T;
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shopLayout_select".
+ */
+export interface ShopLayoutSelect<T extends boolean = true> {
+  shop?: T;
+  productDetails?:
+    | T
+    | {
+        type?: T;
+        reviewsEnabled?: T;
+      };
+  productList?:
+    | T
+    | {
+        filters?: T;
+      };
+  cartAndWishlist?:
+    | T
+    | {
+        type?: T;
+      };
+  checkout?:
+    | T
+    | {
+        type?: T;
+      };
+  clientPanel?:
+    | T
+    | {
+        type?: T;
+        help?:
+          | T
+          | {
+              title?: T;
+              content?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shopSettings_select".
+ */
+export interface ShopSettingsSelect<T extends boolean = true> {
+  shop?: T;
+  availableCurrencies?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -2071,240 +2298,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header".
- */
-export interface Header {
-  id: string;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
-  id: string;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imageSettings".
- */
-export interface ImageSetting {
-  id: string;
-  /**
-   * The aspect ratio select will affect how the uploaded images will be processed and displayed in the UI
-   */
-  productAspectRatio: '1:1' | '3:2' | '4:3' | '16:9';
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shopLayout".
- */
-export interface ShopLayout {
-  id: string;
-  productDetails: {
-    type: 'WithImageGalleryExpandableDetails';
-    reviewsEnabled: boolean;
-  };
-  productList: {
-    filters: 'none' | 'withSidebar' | 'sortOnly';
-  };
-  cartAndWishlist: {
-    type: 'slideOver';
-  };
-  checkout: {
-    type: 'OneStepWithSummary';
-  };
-  clientPanel: {
-    type: 'withSidebar';
-    help: {
-      title: string;
-      content: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-    };
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shopSettings".
- */
-export interface ShopSetting {
-  id: string;
-  /**
-   * Supported currencies by your shop
-   */
-  availableCurrencies: 'NPR'[];
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header_select".
- */
-export interface HeaderSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer_select".
- */
-export interface FooterSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imageSettings_select".
- */
-export interface ImageSettingsSelect<T extends boolean = true> {
-  productAspectRatio?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shopLayout_select".
- */
-export interface ShopLayoutSelect<T extends boolean = true> {
-  productDetails?:
-    | T
-    | {
-        type?: T;
-        reviewsEnabled?: T;
-      };
-  productList?:
-    | T
-    | {
-        filters?: T;
-      };
-  cartAndWishlist?:
-    | T
-    | {
-        type?: T;
-      };
-  checkout?:
-    | T
-    | {
-        type?: T;
-      };
-  clientPanel?:
-    | T
-    | {
-        type?: T;
-        help?:
-          | T
-          | {
-              title?: T;
-              content?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shopSettings_select".
- */
-export interface ShopSettingsSelect<T extends boolean = true> {
-  availableCurrencies?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

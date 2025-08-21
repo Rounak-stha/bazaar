@@ -119,6 +119,12 @@ export const plugins: Plugin[] = [
   payloadCloudPlugin(),
   multiTenantPlugin<Config>({
     collections: {
+      footer: {
+        isGlobal: true,
+      },
+      header: {
+        isGlobal: true,
+      },
       pages: {},
       orders: {},
       products: {},
@@ -128,6 +134,12 @@ export const plugins: Plugin[] = [
       media: {},
       posts: {},
       categories: {},
+      shopSettings: {
+        isGlobal: true,
+      },
+      shopLayout: {
+        isGlobal: true,
+      },
     },
     tenantsSlug: 'shops',
     tenantField: {

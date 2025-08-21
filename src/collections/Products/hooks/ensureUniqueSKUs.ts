@@ -53,7 +53,6 @@ export const ensureUniqueSKUs: CollectionBeforeValidateHook<Product> = async ({
     existingProducts.docs.forEach((product) => {
       product.variants.forEach((variant) => {
         const dataIndex = data?.variants?.findIndex((v) => v.sku == variant.sku)
-        console.log({ dataIndex, variant })
         if (dataIndex != undefined && dataIndex != -1) {
           variantIndexWithDuplicateSkus.push(dataIndex)
         }

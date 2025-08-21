@@ -1,19 +1,25 @@
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { ProductDetails } from '@/globals/ShopLayout/ProductDetails/Component'
+import { ProductDetails } from '@/collections/ShopLayout/ProductDetails/Component'
 import config from '@payload-config'
+import { getCachedShopByDomain } from '@/utilities/shop/getShop'
+import { SearchParams } from '@/types/next'
 
 const ProductPage = async ({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
-  searchParams: Promise<Record<string, string | undefined>>
+  params: Promise<{ domain: string; slug: string }>
+  searchParams: Promise<SearchParams>
 }) => {
   try {
     const payload = await getPayload({ config })
-    const { slug } = await params
+    const { domain, slug } = await params
+    const shop = await getCachedShopByDomain(domain)()
+
+    if (!shop) notFound()
+
     const { docs } = await payload.find({
       collection: 'products',
       depth: 2,
@@ -29,7 +35,7 @@ const ProductPage = async ({
       notFound()
     }
 
-    return <ProductDetails variant={variant} product={docs[0]} />
+    return <ProductDetails shop={shop} product={docs[0]} selectedVariantId={variant as string} />
   } catch {
     notFound()
   }

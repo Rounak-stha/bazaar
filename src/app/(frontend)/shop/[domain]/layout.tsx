@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import { notFound, redirect } from 'next/navigation'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
-import { Footer } from '@/globals/Footer/Component'
-import { Header } from '@/globals/Header/Component'
+import { Footer } from '@/collections/Footer/Component'
+import { Header } from '@/collections/Header/Component'
 import { Providers } from '@/providers'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
@@ -11,9 +12,19 @@ import { draftMode } from 'next/headers'
 import { getServerSideURL } from '@/utilities/getURL'
 import { Cart } from '@/components/Cart/Component'
 import { WishList } from '@/components/WishList/Component'
+import { getCachedShopByDomain } from '@/utilities/shop/getShop'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+type RootLayoutProps = {
+  params: Promise<{ domain: string }>
+  children: React.ReactNode
+}
+
+export default async function RootLayout({ params, children }: RootLayoutProps) {
+  const { domain } = await params
   const { isEnabled } = await draftMode()
+  const shop = await getCachedShopByDomain(domain)()
+
+  if (!shop) return notFound()
 
   return (
     <Providers>
@@ -23,11 +34,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         }}
       />
 
-      <Header />
+      <Header shop={shop} />
       <Cart />
       <WishList />
       {children}
-      <Footer />
+      <Footer shop={shop} />
     </Providers>
   )
 }

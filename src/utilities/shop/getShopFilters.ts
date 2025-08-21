@@ -9,31 +9,27 @@ async function getShopFilters(shopId: string): Promise<ShopFilters> {
   const payload = await getPayload({ config: configPromise })
 
   const { docs } = await payload.find({
-    collection: 'products',
+    collection: 'productOptions',
+    depth: 1,
     where: {
       shop: { equals: shopId },
-      _status: { not_equals: 'draft' },
-    },
-    select: {
-      variants: {
-        options: true,
-      },
     },
     limit: 1000,
   })
 
-  const filterMap: Record<string, Set<string>> = {}
+  const filterMap: ShopFilters = {}
 
-  for (const product of docs) {
-    for (const variant of product.variants ?? []) {
-      for (const opt of variant.options ?? []) {
-        if (!filterMap[opt.name]) filterMap[opt.name] = new Set()
-        filterMap[opt.name].add(opt.value)
-      }
+  for (const option of docs) {
+    if (!option.values) continue
+    const values = option.values?.docs || []
+    if (!filterMap[option.name]) filterMap[option.name] = []
+    for (const value of values) {
+      if (typeof value == 'string') continue
+      else filterMap[option.name].push({ id: value.id, name: value.name })
     }
   }
 
-  return Object.fromEntries(Object.entries(filterMap).map(([key, value]) => [key, [...value]]))
+  return filterMap
 }
 
 /**

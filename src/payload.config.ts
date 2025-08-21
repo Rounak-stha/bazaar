@@ -19,17 +19,15 @@ import { Products } from './collections/Products'
 import { ProductCategories } from './collections/ProductCategories'
 import { Shops } from './collections/Shops'
 import { Users } from './collections/Users'
-import { Footer } from './globals/Footer/config'
-import { Header } from './globals/Header/config'
-import { ImageSettings } from './globals/ImageSettings/config'
-import { ShopLayout } from './globals/ShopLayout/config'
-import { ShopSettings } from './globals/ShopSettings/config'
+import { Footer } from './collections/Footer'
+import { Header } from './collections/Header'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { loginUserEndpoint } from './endpoints/auth/login'
 import { ProductOptions } from './collections/ProductOptions'
 import { ProductOptionValues } from './collections/ProductOptionValues'
+import { globals } from './globals'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -111,9 +109,9 @@ export default buildConfig({
     Products,
     Shops,
     Users,
+    ...globals,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, ImageSettings, ShopLayout, ShopSettings],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
