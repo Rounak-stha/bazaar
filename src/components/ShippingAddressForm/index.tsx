@@ -22,6 +22,36 @@ export const ShippingAddressForm = () => {
           </FormItem>
         )}
       />
+
+      
+<FormField
+        control={form.control}
+        name="shipping.email"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-2">
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input placeholder="Email" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      
+      <FormField
+        control={form.control}
+        name="shipping.phone"
+        render={({ field }) => (
+          <FormItem className="sm:col-span-2">
+            <FormLabel>Phone</FormLabel>
+            <FormControl>
+              <Input placeholder="Phone" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       <FormField
         control={form.control}
         name="shipping.province"
@@ -35,6 +65,7 @@ export const ShippingAddressForm = () => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="shipping.city"
@@ -51,25 +82,12 @@ export const ShippingAddressForm = () => {
 
       <FormField
         control={form.control}
-        name="shipping.phone"
+        name="shipping.street"
         render={({ field }) => (
-          <FormItem className="sm:col-span-2">
-            <FormLabel>Phone</FormLabel>
+          <FormItem>
+            <FormLabel>Street</FormLabel>
             <FormControl>
-              <Input placeholder="Phone" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="shipping.email"
-        render={({ field }) => (
-          <FormItem className="sm:col-span-2">
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <Input placeholder="Email" {...field} />
+              <Input placeholder="Street" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

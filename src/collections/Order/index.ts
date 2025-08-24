@@ -3,12 +3,12 @@ import type { CollectionConfig } from 'payload'
 import { getChartData } from '@/endpoints/adminDashboard/getChartData'
 import { getOrderCount } from '@/endpoints/adminDashboard/getOrderCount'
 import { getRevenue } from '@/endpoints/adminDashboard/getRevenue'
-import { currencyField } from '@/fields/currencyField'
 
-import { generateID } from './hooks/generateID'
 import { commonAddressFields } from '@/fields/address/fields'
 import { anyone } from '@/access/anyone'
 import { superAdminOrTenantAdminAccess } from '@/access/superAdminOrTenantAdmin'
+import { snapshotOrderItems } from './hooks/snapshotOrderItems'
+import { pricingField } from '@/fields/pricing'
 
 export const Order: CollectionConfig = {
   slug: 'orders',
@@ -45,18 +45,9 @@ export const Order: CollectionConfig = {
     plural: 'Orders',
   },
   hooks: {
-    beforeValidate: [generateID],
+    beforeValidate: [snapshotOrderItems],
   },
   fields: [
-    {
-      name: 'id',
-      type: 'text',
-      admin: {
-        hidden: true,
-      },
-      required: true,
-      unique: true,
-    },
     {
       name: 'customer',
       type: 'relationship',
@@ -65,39 +56,36 @@ export const Order: CollectionConfig = {
     {
       name: 'items',
       type: 'array',
+      admin: {
+        // readOnly: true
+      },
       required: true,
       fields: [
+        // References
+        { name: 'productId', type: 'text', required: true },
+        { name: 'variantId', type: 'text', required: true },
+
+        // Display
+        { name: 'productTitle', type: 'text', required: true },
+        { name: 'variantName', type: 'text', required: true },
+        { name: 'sku', type: 'text', required: true },
+
         {
-          name: 'product',
-          type: 'relationship',
-          relationTo: 'products',
-          required: true,
+          name: 'options',
+          type: 'array',
+          fields: [
+            { name: 'type', type: 'text', required: true },
+            { name: 'value', type: 'text', required: true },
+          ],
         },
-        {
-          name: 'variantSlug',
-          type: 'text',
-          required: false, // required only if variants are used
-        },
-        {
-          name: 'price',
-          type: 'number',
-          required: true,
-        },
-        currencyField,
-        {
-          name: 'quantity',
-          type: 'number',
-          required: true,
-          min: 1,
-        },
-        {
-          name: 'subtotal',
-          type: 'number',
-          required: true,
-          // admin: { readOnly: true },
-        },
+
+        pricingField,
+
+        { name: 'image', type: 'upload', relationTo: 'media' },
+        { name: 'quantity', type: 'number', min: 1, required: true },
       ],
     },
+
     {
       name: 'shippingAddress',
       type: 'group',
@@ -107,7 +95,6 @@ export const Order: CollectionConfig = {
           name: 'address',
           type: 'relationship',
           relationTo: 'addresses',
-          required: true,
         },
         ...commonAddressFields,
       ],
@@ -139,7 +126,7 @@ export const Order: CollectionConfig = {
     {
       name: 'paymentStatus',
       type: 'select',
-      options: ['unpaid', 'paid', 'refunded'],
+      options: ['unpaid', 'paid', 'refunded', 'failed', 'cancelled'],
       defaultValue: 'unpaid',
       required: true,
     },

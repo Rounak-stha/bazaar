@@ -80,9 +80,11 @@ export interface Config {
     productOptions: ProductOption;
     products: Product;
     shops: Shop;
+    transactions: Transaction;
     users: User;
     header: Header;
     footer: Footer;
+    paymentProviders: PaymentProvider;
     shopLayout: ShopLayout;
     shopSettings: ShopSetting;
     redirects: Redirect;
@@ -115,9 +117,11 @@ export interface Config {
     productOptions: ProductOptionsSelect<false> | ProductOptionsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     shops: ShopsSelect<false> | ShopsSelect<true>;
+    transactions: TransactionsSelect<false> | TransactionsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    paymentProviders: PaymentProvidersSelect<false> | PaymentProvidersSelect<true>;
     shopLayout: ShopLayoutSelect<false> | ShopLayoutSelect<true>;
     shopSettings: ShopSettingsSelect<false> | ShopSettingsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -878,20 +882,32 @@ export interface Form {
  * via the `definition` "orders".
  */
 export interface Order {
-  shop?: (string | null) | Shop;
   id: string;
+  shop?: (string | null) | Shop;
   customer?: (string | null) | User;
   items: {
-    product: string | Product;
-    variantSlug?: string | null;
-    price: number;
-    currency: string;
+    productId: string;
+    variantId: string;
+    productTitle: string;
+    variantName: string;
+    sku: string;
+    options?:
+      | {
+          type: string;
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+    pricing: {
+      value: number;
+      currency: string;
+    };
+    image?: (string | null) | Media;
     quantity: number;
-    subtotal: number;
     id?: string | null;
   }[];
   shippingAddress: {
-    address: string | Address;
+    address?: (string | null) | Address;
     fullName: string;
     province: 'Koshi' | 'Madhesh' | 'Bagmati' | 'Gandaki' | 'Lumbini' | 'Karnali' | 'Sudhurpaschim';
     city: string;
@@ -903,8 +919,26 @@ export interface Order {
   subtotal: number;
   shippingCost: number;
   total: number;
-  paymentStatus: 'unpaid' | 'paid' | 'refunded';
+  paymentStatus: 'unpaid' | 'paid' | 'refunded' | 'failed' | 'cancelled';
   notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productCategories".
+ */
+export interface ProductCategory {
+  id: string;
+  shop?: (string | null) | Shop;
+  title: string;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  products?: {
+    docs?: (string | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1001,7 +1035,7 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
-  bought?: number | null;
+  bought: number;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1038,19 +1072,30 @@ export interface ProductOptionValue {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productCategories".
+ * via the `definition` "transactions".
  */
-export interface ProductCategory {
+export interface Transaction {
   id: string;
   shop?: (string | null) | Shop;
-  title: string;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  products?: {
-    docs?: (string | Product)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
+  provider: string;
+  currency: string;
+  amount: number;
+  status: 'pending' | 'success' | 'failed' | 'refunded' | 'expired' | 'user_cancelled';
+  providerTransactionId: string;
+  /**
+   * Raw provider response for debugging or reconciliation.
+   */
+  metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  user?: (string | null) | User;
+  order: string | Order;
   updatedAt: string;
   createdAt: string;
 }
@@ -1111,6 +1156,29 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paymentProviders".
+ */
+export interface PaymentProvider {
+  id: string;
+  shop?: (string | null) | Shop;
+  khalti: {
+    enabled: boolean;
+    config?: {
+      /**
+       * Get the `Live Secret Key` from Khalti merchant settings
+       */
+      liveSecretKey: string;
+      /**
+       * Get the `Live Public Key` from Khalti merchant settings
+       */
+      livePublicKey?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1394,6 +1462,10 @@ export interface PayloadLockedDocument {
         value: string | Shop;
       } | null)
     | ({
+        relationTo: 'transactions';
+        value: string | Transaction;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
@@ -1404,6 +1476,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'footer';
         value: string | Footer;
+      } | null)
+    | ({
+        relationTo: 'paymentProviders';
+        value: string | PaymentProvider;
       } | null)
     | ({
         relationTo: 'shopLayout';
@@ -1778,17 +1854,30 @@ export interface CustomersSelect<T extends boolean = true> {
  */
 export interface OrdersSelect<T extends boolean = true> {
   shop?: T;
-  id?: T;
   customer?: T;
   items?:
     | T
     | {
-        product?: T;
-        variantSlug?: T;
-        price?: T;
-        currency?: T;
+        productId?: T;
+        variantId?: T;
+        productTitle?: T;
+        variantName?: T;
+        sku?: T;
+        options?:
+          | T
+          | {
+              type?: T;
+              value?: T;
+              id?: T;
+            };
+        pricing?:
+          | T
+          | {
+              value?: T;
+              currency?: T;
+            };
+        image?: T;
         quantity?: T;
-        subtotal?: T;
         id?: T;
       };
   shippingAddress?:
@@ -1919,6 +2008,23 @@ export interface ShopsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions_select".
+ */
+export interface TransactionsSelect<T extends boolean = true> {
+  shop?: T;
+  provider?: T;
+  currency?: T;
+  amount?: T;
+  status?: T;
+  providerTransactionId?: T;
+  metadata?: T;
+  user?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -1989,6 +2095,26 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paymentProviders_select".
+ */
+export interface PaymentProvidersSelect<T extends boolean = true> {
+  shop?: T;
+  khalti?:
+    | T
+    | {
+        enabled?: T;
+        config?:
+          | T
+          | {
+              liveSecretKey?: T;
+              livePublicKey?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

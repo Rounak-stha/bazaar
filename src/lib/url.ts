@@ -1,9 +1,9 @@
+import { Shop } from '@/payload-types'
 import type { NextRequest } from 'next/server'
+import { isDevelopment } from './isdevelopment'
+import { PaymentProviderName } from '@/payments/types'
 
-const isDevelopment = !(
-  process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ||
-  process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview'
-)
+const protocol = isDevelopment ? 'http' : 'https'
 
 export const SITE_URL = (() => {
   if (!isDevelopment) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -18,6 +18,8 @@ export const RootDomainFormatted = (() => {
   return host
 })()
 
+export const getShopUrl = (shop: Shop) => `${protocol}://${shop.domain}.${RootDomainFormatted}`
+
 /**
  * Method adapted from: https://github.com/vercel/platforms/blob/main/middleware.ts
  */
@@ -29,4 +31,6 @@ export function extractSubdomain(request: NextRequest): string | null {
 
 export const Paths = {
   cartProducts: (shopDomain: string) => `/api/cart/products`,
-}
+  orderConfirm: (provider: PaymentProviderName) => `/order/confirm/${provider}`,
+  shop: '/shop',
+} as const

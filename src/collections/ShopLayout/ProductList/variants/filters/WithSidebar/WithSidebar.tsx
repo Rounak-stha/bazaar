@@ -11,7 +11,6 @@ import { type ReactNode } from 'react'
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 import { FilterCheckbox } from './components/FilterCheckbox'
-import { MobileFiltersCloseButton } from './components/MobileFiltersCloseButton'
 import { MobileFiltersDialog } from './components/MobileFiltersDialog'
 import { MobileFunnelFiltersButton } from './components/MobileFunnelFiltersButton'
 import { SortSelect } from './components/SortSelect'

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/sheet'
 
 import { useCartState } from '@/stores/CartStateStore'
-import { CartContents } from '../content'
+import { CartContents } from '../../components/content'
 
 export const SlideOver = () => {
   const { isOpen, toggleCart } = useCartState()

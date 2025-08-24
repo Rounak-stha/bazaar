@@ -1,12 +1,9 @@
-import { TrashIcon } from 'lucide-react'
-
 import { PriceClient } from '@/components/PriceClient'
-import { QuantityInput } from '@/components/QuantityInput'
-import { Media } from '@/components/Media'
-import { type ProductWithFilledVariants } from '@/globals/ShopLayout/Cart/variants/SlideOver'
-import { useCart } from '@/stores/CartStore'
+
 import { type Currency } from '@/stores/Currency/types'
-import Link from 'next/link'
+import { CartProductList } from '@/components/(storefront)/Cart/components/cartProductList'
+import { CartToCheckout } from '@/stores/CartStore/types'
+import { Button } from '@/components/ui/button'
 
 /**
  * This function merges two arrays of objects with currency and value, summing up the values with the same currency.
@@ -32,53 +29,17 @@ const mergeAmounts = (
 }
 
 export const OrderSummary = ({
-  products,
-  totalPrice,
   shippingCost,
   errorMessage,
 }: {
-  products?: ProductWithFilledVariants[]
-  totalPrice?: {
-    currency: Currency
-    value: number
-  }[]
+  cartToCheckout: CartToCheckout
   shippingCost?: {
     currency: Currency
     value: number
   }[]
   errorMessage?: string
 }) => {
-  const totalPriceWithShipping = mergeAmounts(totalPrice, shippingCost)
-  const { cart, updateCart, setCart, removeFromCart } = useCart()
-
-  const setCartQuantity = (
-    quantity: number,
-    productID: string,
-    productVariantSlug: string | undefined,
-  ) => {
-    setCart([
-      ...(cart?.filter((cartProduct) => cartProduct.id !== productID) ?? []),
-      {
-        id: productID,
-        quantity,
-        choosenVariantSlug: productVariantSlug,
-      },
-    ])
-  }
-
-  const updateCartQuantity = (
-    delta: number,
-    productID: string,
-    productVariantSlug: string | undefined,
-  ) => {
-    updateCart([
-      {
-        id: productID,
-        quantity: delta,
-        choosenVariantSlug: productVariantSlug,
-      },
-    ])
-  }
+  // const totalPriceWithShipping = mergeAmounts(cartToCheckout.total, shippingCost)
 
   return (
     <div className="mt-10 lg:sticky lg:top-28 lg:mt-0 lg:h-fit">
@@ -86,107 +47,12 @@ export const OrderSummary = ({
 
       <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-xs">
         <h3 className="sr-only">Items In Cart</h3>
-        <ul role="list" className="divide-y divide-gray-200">
-          {products?.map((product) => (
-            <li key={`${product.id}-${product.variant?.slug}`} className="flex px-4 py-6 sm:px-6">
-              <div className="shrink-0">
-                {product.variant?.image?.url ? (
-                  <Media resource={product.variant.image} className="w-20 rounded-md" />
-                ) : product.image?.url ? (
-                  <Media resource={product.image} className="w-20 rounded-md" />
-                ) : null}
-              </div>
-
-              <div className="ml-6 flex flex-1 flex-col">
-                <div className="flex">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-sm">
-                      <Link
-                        className="font-medium text-gray-700 hover:text-gray-800"
-                        href={`/product/${product.slug}${product.enableVariants && product?.variant?.slug ? `?variant=${product.variant.slug}` : ''}`}
-                      >
-                        {product.title}
-                      </Link>
-                    </h4>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {[
-                        product.enableVariants && product.variant?.color?.label,
-                        product.enableVariants && product.variant?.size?.label,
-                      ]
-                        .filter(Boolean)
-                        .join(', ')}
-                    </p>
-                  </div>
-
-                  <div className="ml-4 flow-root shrink-0">
-                    <button
-                      type="button"
-                      className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
-                      onClick={() => {
-                        removeFromCart(product.id, product.variant?.slug ?? undefined)
-                      }}
-                    >
-                      <span className="sr-only">Remove</span>
-                      <TrashIcon aria-hidden="true" className="size-5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex flex-1 items-end justify-between pt-2">
-                  <p className="mt-1 text-sm font-medium text-gray-900">
-                    <PriceClient
-                      pricing={
-                        product.enableVariantPrices
-                          ? (product.variant?.pricing?.map((p) => ({
-                              ...p,
-                              value: p.value * product.quantity,
-                            })) ?? [])
-                          : product.pricing
-                            ? product.pricing.map((p) => ({
-                                ...p,
-                                value: p.value * product.quantity,
-                              }))
-                            : []
-                      }
-                    />
-                  </p>
-
-                  <div className="ml-4">
-                    <div className="grid grid-cols-1">
-                      <QuantityInput
-                        quantity={
-                          cart?.find(
-                            (cartProduct) =>
-                              cartProduct.id === product.id &&
-                              cartProduct.choosenVariantSlug === product.variant?.slug,
-                          )?.quantity ?? 1
-                        }
-                        inputVariant="cart"
-                        setQuantity={(quantity) => {
-                          setCartQuantity(quantity, product.id, product.variant?.slug ?? undefined)
-                        }}
-                        updateQuantity={(delta) => {
-                          updateCartQuantity(delta, product.id, product.variant?.slug ?? undefined)
-                        }}
-                        maxQuantity={
-                          product.enableVariants
-                            ? (product.variant?.stock ?? 0)
-                            : (product.stock ?? 0)
-                        }
-                        minQuantity={1}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
+        <CartProductList />
+        <dl className="space-y-6 border-t border-gray-200 py-6 px-4 sm:px-6">
           <div className="flex items-center justify-between">
             <dt className="text-sm">Subtotal</dt>
             <dd className="text-sm font-medium text-gray-900">
-              <PriceClient pricing={totalPrice ?? []} />
+              <PriceClient pricing={[{ currency: 'Rs', value: 100 }]} />
             </dd>
           </div>
           <div className="flex items-center justify-between">
@@ -198,18 +64,15 @@ export const OrderSummary = ({
           <div className="flex items-center justify-between border-t border-gray-200 pt-6">
             <dt className="text-base font-medium">Total</dt>
             <dd className="text-base font-medium text-gray-900">
-              <PriceClient pricing={totalPriceWithShipping} />
+              <PriceClient pricing={[{ currency: 'Rs', value: 10 }]} />
             </dd>
           </div>
         </dl>
 
         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-          <button
-            type="submit"
-            className="bg-main-600 hover:bg-main-700 focus:ring-main-500 w-full rounded-md border border-transparent px-4 py-3 text-base font-medium text-white shadow-xs focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
-          >
-            Confirm
-          </button>
+          <Button type="submit" size="lg" className="w-full">
+            Confirm Order
+          </Button>
         </div>
       </div>
       {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}

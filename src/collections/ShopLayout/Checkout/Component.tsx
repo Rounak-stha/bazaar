@@ -1,29 +1,35 @@
-import { notFound } from "next/navigation";
-import { type ReactNode } from "react";
+import 'server-only'
 
-import { type Locale } from "@/i18n/config";
-import { getCachedGlobal } from "@/utilities/getGlobals";
+import { notFound } from 'next/navigation'
+import { FC, type ReactNode } from 'react'
 
-import { OneStepWithSummary } from "./variants/OneStepWithSummary";
+import { getCachedGlobal } from '@/utilities/getGlobals'
 
-export const Checkout = async ({ locale }: { locale: Locale }) => {
+import { OneStepWithSummary } from './variants/OneStepWithSummary'
+import { Shop } from '@/payload-types'
+
+type CheckoutProps = {
+  shop: Shop
+}
+
+export const Checkout: FC<CheckoutProps> = async ({ shop }) => {
   try {
-    const { checkout } = await getCachedGlobal("shopLayout", locale, 1)();
+    const { checkout } = await getCachedGlobal('shopLayout', shop.id)()
 
-    let CheckoutComponent: ReactNode = null;
+    let CheckoutComponent: ReactNode = null
     switch (checkout.type) {
-      case "OneStepWithSummary":
-        CheckoutComponent = <OneStepWithSummary locale={locale} />;
-        break;
+      case 'OneStepWithSummary':
+        CheckoutComponent = <OneStepWithSummary />
+        break
     }
 
     if (!CheckoutComponent) {
-      notFound();
+      notFound()
     }
 
-    return CheckoutComponent;
+    return CheckoutComponent
   } catch (error) {
-    console.log(error);
-    notFound();
+    console.log(error)
+    notFound()
   }
-};
+}

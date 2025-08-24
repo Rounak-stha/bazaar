@@ -127,6 +127,9 @@ export const plugins: Plugin[] = [
       },
       pages: {},
       orders: {},
+      paymentProviders: {
+        isGlobal: true,
+      },
       products: {},
       productCategories: {},
       productOptions: {},
@@ -140,6 +143,7 @@ export const plugins: Plugin[] = [
       shopLayout: {
         isGlobal: true,
       },
+      transactions: {},
     },
     tenantsSlug: 'shops',
     tenantField: {

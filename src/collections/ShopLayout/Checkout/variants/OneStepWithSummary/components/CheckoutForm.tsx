@@ -8,18 +8,17 @@ import { useForm, useWatch } from 'react-hook-form'
 import { ShippingAddressForm } from '@/components/ShippingAddressForm'
 import { Form } from '@/components/ui/form'
 
-import { Button } from '@/components/ui/button'
-import { type ProductWithFilledVariants } from '@/globals/ShopLayout/Cart/variants/SlideOver'
-import { Address, type Customer, type Media } from '@/payload-types'
+import type { Media } from '@/payload-types'
 import { type CheckoutFormData, useCheckoutFormSchema } from '@/schemas/checkoutForm.schema'
 import { useCart } from '@/stores/CartStore'
-import { type Cart } from '@/stores/CartStore/types'
+import { CartToCheckout, type Cart } from '@/stores/CartStore/types'
 import { useCurrency } from '@/stores/Currency'
 import { type Currency } from '@/stores/Currency/types'
 
 import { OrderSummary } from './OrderSummary'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useRouter } from 'next/navigation'
+import { CheckoutData } from '@/types/checkout'
 
 export type FilledCourier = {
   slug: string
@@ -35,37 +34,21 @@ export type FilledCourier = {
     | undefined
 }
 
-type CheckoutFormProps = {
-  user?: Customer
-  addresses?: Address[]
-}
-
-export const CheckoutForm = ({ addresses }: CheckoutFormProps) => {
+export const CheckoutForm = () => {
   const { CheckoutFormSchema } = useCheckoutFormSchema()
-
-  const shippingAddresses = addresses && addresses.length > 0 ? addresses : null
-
-  const defaultShippingAddress = shippingAddresses
-    ? (shippingAddresses.find((address) => address.isDefault) ?? shippingAddresses[0])
-    : null
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(CheckoutFormSchema),
-    defaultValues: {
-      shipping: {
-        fullName: defaultShippingAddress?.fullName ?? '',
-        province: defaultShippingAddress?.province ?? 'Bagmati',
-        city: defaultShippingAddress?.city ?? '',
-        street: defaultShippingAddress?.street ?? '',
-        phone: defaultShippingAddress?.phone ?? '',
-        email: defaultShippingAddress?.email ?? '',
-      },
-    },
   })
 
-  const shipping = useWatch({ control: form.control, name: 'shipping' })
+  const { cart, setCart } = useCart()
+  const currency = useCurrency()
 
-  const [checkoutProducts, setCheckoutProducts] = useState<ProductWithFilledVariants[]>()
+  const [checkoutProducts, setCheckoutProducts] = useState<CartToCheckout>({
+    products: cart || [],
+    total: 100,
+    totalQuantity: 2,
+  })
   const [totalPrice, setTotalPrice] = useState<
     {
       currency: Currency
@@ -73,19 +56,15 @@ export const CheckoutForm = ({ addresses }: CheckoutFormProps) => {
     }[]
   >()
 
-  const { cart, setCart } = useCart()
-  const currency = useCurrency()
-
   /**
    * Fetches products from the cart, calculates the total price and available couriers with their prices. Basically, it's getting all checkout needed data.
    * @param cartToCalculate - Actual cart to calculate the total price and available couriers.
    * @param countryToCalculate - Country to get available couriers.
    */
-  const fetchCartProducts = useCallback(
-    async (cartToCalculate: Cart | null) => {
+  /* const fetchCartProducts = useCallback(
+    async (cartToCalculate: Cart) => {
       try {
         const { data } = await axios.post<{
-          status: number
           productsWithTotalAndCouriers: {
             filledProducts: ProductWithFilledVariants[]
             total: {
@@ -104,26 +83,31 @@ export const CheckoutForm = ({ addresses }: CheckoutFormProps) => {
       }
     },
     [setCheckoutProducts, setTotalPrice],
-  )
+  ) */
 
-  const debouncedFetchCartProducts = useMemo(() => fetchCartProducts, [fetchCartProducts])
+  // const debouncedFetchCartProducts = useMemo(() => fetchCartProducts, [fetchCartProducts])
 
-  useEffect(() => {
+  /* useEffect(() => {
     void debouncedFetchCartProducts(cart)
-  }, [cart, debouncedFetchCartProducts])
+  }, [cart, debouncedFetchCartProducts]) */
 
   const router = useRouter()
 
   const onSubmit = async (values: CheckoutFormData) => {
     try {
-      const { data } = await axios.post<{ status: number; url?: string }>('/api/payment', {
+      const { data, status } = await axios.post<{ redirectUrl: string }>('/api/checkout/payment', {
         cart,
-        checkoutData: values,
-        currency: currency.currency,
-      })
-      if (data.status === 200 && data.url) {
+        paymentProvider: 'khalti',
+        address: values.shipping,
+        cost: {
+          currency: 'NPR',
+          subTotal: 1000,
+          total: 1000,
+        },
+      } as CheckoutData)
+      if (status === 200 && data.redirectUrl) {
         setCart(null)
-        router.push(data.url)
+        window.location.href = data.redirectUrl
       } else {
         form.setError('root', { message: 'Internal Server Error' })
       }
@@ -141,36 +125,10 @@ export const CheckoutForm = ({ addresses }: CheckoutFormProps) => {
           className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"
         >
           <div>
-            <div className="mt-10 border-t border-gray-200 pt-10">
-              <h2 className="text-lg font-medium text-gray-900">Shipping Address</h2>
+            <h2 className="text-lg font-medium text-gray-900">Shipping Address</h2>
 
-              <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                {shippingAddresses ? (
-                  <div className="group ring-main-500 relative flex cursor-pointer rounded-lg border border-gray-300 border-transparent bg-white p-4 shadow-xs ring-2 focus:outline-hidden">
-                    <span className="flex flex-1">
-                      <span className="flex w-full flex-col">
-                        <span className="block text-sm font-medium text-gray-900">
-                          {shipping.fullName}
-                        </span>
-                        <span className="mt-1 flex items-center text-sm text-gray-500">
-                          {shipping.province}
-                        </span>
-                        <span className="mt-1 text-sm font-medium text-gray-500">
-                          {shipping.city}, {shipping.street}
-                        </span>
-                        <span className="mt-1 flex items-center text-sm text-gray-500">
-                          {shipping.phone}
-                        </span>
-                        <span className="mt-1 flex items-center text-sm text-gray-500">
-                          {shipping.email}
-                        </span>
-                      </span>
-                    </span>
-                  </div>
-                ) : (
-                  <ShippingAddressForm />
-                )}
-              </div>
+            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+              <ShippingAddressForm />
             </div>
             {/*
             <div className="mt-10 border-t border-gray-200 pt-10">
@@ -210,8 +168,8 @@ export const CheckoutForm = ({ addresses }: CheckoutFormProps) => {
             </div> */}
           </div>
           <OrderSummary
-            products={checkoutProducts}
-            totalPrice={totalPrice}
+            cartToCheckout={checkoutProducts}
+            // totalPrice={totalPrice}
             // shippingCost={deliveryMethods.find((method) => method.slug === selectedDelivery)?.pricing}
             errorMessage={form.formState.errors.root?.message}
           />

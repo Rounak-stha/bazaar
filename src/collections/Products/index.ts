@@ -287,6 +287,7 @@ export const Products: CollectionConfig = {
               index: true,
               label: 'Bought',
               type: 'number',
+              required: true,
               defaultValue: 0,
             },
           ],

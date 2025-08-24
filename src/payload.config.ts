@@ -19,8 +19,6 @@ import { Products } from './collections/Products'
 import { ProductCategories } from './collections/ProductCategories'
 import { Shops } from './collections/Shops'
 import { Users } from './collections/Users'
-import { Footer } from './collections/Footer'
-import { Header } from './collections/Header'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -28,6 +26,7 @@ import { loginUserEndpoint } from './endpoints/auth/login'
 import { ProductOptions } from './collections/ProductOptions'
 import { ProductOptionValues } from './collections/ProductOptionValues'
 import { globals } from './globals'
+import { Transactions } from './collections/Transactions'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -94,6 +93,11 @@ export default buildConfig({
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    transactionOptions: {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority' },
+    },
   }),
   collections: [
     Addresses,
@@ -108,6 +112,7 @@ export default buildConfig({
     ProductOptions,
     Products,
     Shops,
+    Transactions,
     Users,
     ...globals,
   ],
