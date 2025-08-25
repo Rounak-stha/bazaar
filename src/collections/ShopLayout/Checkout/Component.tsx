@@ -7,6 +7,7 @@ import { getCachedGlobal } from '@/utilities/getGlobals'
 
 import { OneStepWithSummary } from './variants/OneStepWithSummary'
 import { Shop } from '@/payload-types'
+import { getEnabledProviders } from '@/payments'
 
 type CheckoutProps = {
   shop: Shop
@@ -15,11 +16,13 @@ type CheckoutProps = {
 export const Checkout: FC<CheckoutProps> = async ({ shop }) => {
   try {
     const { checkout } = await getCachedGlobal('shopLayout', shop.id)()
+    const paymentProvider = await getCachedGlobal('paymentProviders', shop.id)()
+    const enabledPaymentProviders = getEnabledProviders(paymentProvider)
 
     let CheckoutComponent: ReactNode = null
     switch (checkout.type) {
       case 'OneStepWithSummary':
-        CheckoutComponent = <OneStepWithSummary />
+        CheckoutComponent = <OneStepWithSummary paymentProviders={enabledPaymentProviders} />
         break
     }
 

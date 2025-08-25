@@ -14,7 +14,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ domain:
     const payload = await getPayload({ config })
     const shop = await getCachedShopByDomain(domain)()
     const checkoutData = (await req.json()) as CheckoutData
-    const { cart, paymentProvider, address, cost } = checkoutData
+    const { cart, paymentProvider, address } = checkoutData
 
     if (!cart) return Response.json({ message: 'Empty Cart' }, { status: 400 })
     if (!shop) return Response.json({ message: 'Invalid Shop' }, { status: 400 })
@@ -56,18 +56,14 @@ export async function POST(req: Request, { params }: { params: Promise<{ domain:
       return Response.json({ error: 'Low Stock', data: checkCartInStockResult }, { status: 400 })
     }
 
-    if (priceForItemsInCart !== cost.total) {
-      return Response.json({ error: 'Invaid Cost', data: checkCartInStockResult }, { status: 400 })
-    }
-
     let order = await payload.create({
       collection: 'orders',
       data: {
         paymentStatus: 'unpaid',
         status: 'pending',
-        total: cost.total,
+        total: priceForItemsInCart,
         shippingCost: 0,
-        subtotal: cost.subTotal,
+        subtotal: priceForItemsInCart,
         shop: shop.id,
         // the rest of the items data is automatically snapshotted from the order collection hooks
         items: cart.map(
@@ -93,7 +89,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ domain:
       collection: 'transactions',
       data: {
         shop: shop.id,
-        amount: cost.total,
+        amount: priceForItemsInCart,
         currency: 'NPR',
         order: order.id,
         provider: paymentProvider,
@@ -102,10 +98,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ domain:
       },
     })
 
-    const sessionArgs = createSessionArgs({
+    const sessionArgs = createSessionArgs(paymentProvider, {
       order,
       transaction,
-      checkoutData,
       shop,
       paymentDoc: paymentProviderDoc,
     })

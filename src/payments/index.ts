@@ -6,8 +6,6 @@ import {
   isKhaltiEnabled,
   khaltiHandler,
 } from './providers/khalti'
-import { SearchParams } from '@/types/next'
-import { parseSearchParamsValueAsString } from '@/utilities/searchParams'
 
 export function isProviderEnabled(provider: PaymentProviderName, doc: PaymentProvider) {
   switch (provider) {
@@ -27,8 +25,8 @@ export function getHandlerForProvider(provider: PaymentProviderName) {
   }
 }
 
-export function createSessionArgs(data: CheckoutSessionCreateData) {
-  switch (data.checkoutData.paymentProvider) {
+export function createSessionArgs(provider: PaymentProviderName, data: CheckoutSessionCreateData) {
+  switch (provider) {
     case 'khalti':
       return createKhaltiSessionArgs(data)
   }
@@ -39,4 +37,10 @@ export function createLookupArgs(data: LookupArgsCreateData) {
     case 'khalti':
       return createKhaltiLookupArgs(data)
   }
+}
+
+export function getEnabledProviders(doc: PaymentProvider): PaymentProviderName[] {
+  const enabledProviders: PaymentProviderName[] = []
+  if (doc.khalti.enabled) enabledProviders.push('khalti')
+  return enabledProviders
 }

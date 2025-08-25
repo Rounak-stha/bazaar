@@ -117,3 +117,12 @@ export function getCartCost(cart: Cart, products: Pick<Product, 'id' | 'variants
 
   return cost
 }
+
+/**
+ * Raw cart cost
+ * Used in the UI
+ * Should not be used for actual checkout
+ */
+export function calculateCartCost(cart: Cart) {
+  return cart.reduce((a, c) => a + c.variant.pricing.value * c.quantity, 0)
+}

@@ -31,6 +31,6 @@ export const config = {
      * Since the admin panel also has this api route, this will also be routed through this middleware
      * But for admin panel, we're not using any subdomains, so there won't be any rewrites
      */
-    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets/).*)',
   ],
 }

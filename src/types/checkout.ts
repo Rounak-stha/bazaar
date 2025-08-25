@@ -6,9 +6,8 @@ export type CheckoutData = {
   cart: Cart
   paymentProvider: PaymentProviderName
   address: Address
-  cost: {
-    subTotal: number
-    total: number
-    currency: string
-  }
+}
+
+export interface CheckoutPageVariantProps {
+  paymentProviders: PaymentProviderName[]
 }

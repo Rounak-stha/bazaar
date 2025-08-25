@@ -7,8 +7,8 @@ import { CartProduct, type Cart } from './types'
 import { Product } from '@/payload-types'
 
 type CartState = {
-  cart: Cart | null
-  setCart: (cartToSet: Cart | null) => void
+  cart: Cart
+  setCart: (cartToSet: Cart) => void
   updateCart: (cartToSet: Cart) => void
   removeFromCart: (productId: string, variantSlug?: string) => void
   synchronizeCart: () => Promise<void>
@@ -75,9 +75,9 @@ const useCartStore = create<CartState>((set) => ({
           return []
         }
       })()
-    : null,
+    : [],
 
-  setCart: (cartToSet: Cart | null) => {
+  setCart: (cartToSet: Cart) => {
     if (canUseDOM) {
       window.localStorage.setItem('cart', JSON.stringify(cartToSet))
     }

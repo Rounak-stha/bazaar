@@ -1,4 +1,5 @@
 import { Address } from '@/payload-types'
+import { PaymentProviderName } from '@/payments/types'
 import { z, type ZodType } from 'zod'
 
 const provinces: Address['province'][] = [
@@ -11,6 +12,8 @@ const provinces: Address['province'][] = [
   'Sudhurpaschim',
 ]
 
+const paymentProviders: PaymentProviderName[] = ['khalti']
+
 export const CheckoutFormSchema = z.object({
   shipping: z.object({
     fullName: z.string(),
@@ -20,6 +23,7 @@ export const CheckoutFormSchema = z.object({
     email: z.email().optional(),
     phone: z.string(),
   }),
+  paymentProvider: z.enum(paymentProviders),
 })
 
 export type CheckoutFormData = z.infer<typeof CheckoutFormSchema>

@@ -14,7 +14,7 @@ import { parseCallbackParams, parseKhaltiLookupStatus } from '../utils'
 import { parseSearchParamsValueAsString } from '@/utilities/searchParams'
 
 export function createKhaltiSessionArgs(args: CheckoutSessionCreateData): KhaltiSessionArgs {
-  const { shop, paymentDoc, checkoutData, order, transaction } = args
+  const { shop, paymentDoc, order, transaction } = args
   const shopUrl = getShopUrl(shop)
   return {
     name: 'khalti',
@@ -23,7 +23,7 @@ export function createKhaltiSessionArgs(args: CheckoutSessionCreateData): Khalti
       livePublicKey: paymentDoc.khalti.config?.livePublicKey,
     },
     data: {
-      amount: checkoutData.cost.total,
+      amount: transaction.amount * 100, // In Paisa
       purchase_order_id: transaction.id,
       purchase_order_name: order.id,
       return_url: shopUrl + Paths.orderConfirm('khalti'),

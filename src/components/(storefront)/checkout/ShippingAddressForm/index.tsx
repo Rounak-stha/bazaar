@@ -23,8 +23,7 @@ export const ShippingAddressForm = () => {
         )}
       />
 
-      
-<FormField
+      <FormField
         control={form.control}
         name="shipping.email"
         render={({ field }) => (
@@ -37,7 +36,7 @@ export const ShippingAddressForm = () => {
           </FormItem>
         )}
       />
-      
+
       <FormField
         control={form.control}
         name="shipping.phone"

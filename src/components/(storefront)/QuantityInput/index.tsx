@@ -9,12 +9,14 @@ export const QuantityInput = ({
   quantity,
   updateQuantity,
   inputVariant = 'default',
+  disabled = false,
 }: {
   minQuantity: number
   maxQuantity: number
   quantity: number
   updateQuantity: (delta: number) => void
   inputVariant?: 'default' | 'cart'
+  disabled?: boolean
 }) => {
   const handleIncreaseQuantity = () => {
     if (quantity < maxQuantity) {
@@ -39,10 +41,10 @@ export const QuantityInput = ({
         type="button"
         className={cn(
           'cursor-pointer p-2',
-          quantity <= minQuantity && 'cursor-not-allowed opacity-25',
+          (quantity <= minQuantity || disabled) && 'cursor-not-allowed opacity-25',
           inputVariant === 'cart' && 'p-1',
         )}
-        disabled={quantity <= minQuantity}
+        disabled={quantity <= minQuantity || disabled}
         onClick={handleDecreaseQuantity}
       >
         <MinusIcon width={20} height={20} />
@@ -58,11 +60,11 @@ export const QuantityInput = ({
       <button
         className={cn(
           'cursor-pointer p-2',
-          quantity >= maxQuantity && 'cursor-not-allowed opacity-25',
+          (quantity >= maxQuantity || disabled) && 'cursor-not-allowed opacity-25',
           inputVariant === 'cart' && 'p-1',
         )}
         type="button"
-        disabled={quantity >= maxQuantity}
+        disabled={quantity >= maxQuantity || disabled}
         onClick={handleIncreaseQuantity}
       >
         <PlusIcon width={20} height={20} />

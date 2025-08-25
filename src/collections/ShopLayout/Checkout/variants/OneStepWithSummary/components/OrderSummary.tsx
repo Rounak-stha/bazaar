@@ -2,8 +2,10 @@ import { PriceClient } from '@/components/PriceClient'
 
 import { type Currency } from '@/stores/Currency/types'
 import { CartProductList } from '@/components/(storefront)/Cart/components/cartProductList'
-import { CartToCheckout } from '@/stores/CartStore/types'
+import { Cart, CartToCheckout } from '@/stores/CartStore/types'
 import { Button } from '@/components/ui/button'
+import { useMemo } from 'react'
+import { calculateCartCost } from '@/utilities/cart/syncCart'
 
 /**
  * This function merges two arrays of objects with currency and value, summing up the values with the same currency.
@@ -28,18 +30,9 @@ const mergeAmounts = (
   return Array.from(merged).map(([currency, value]) => ({ currency, value }))
 }
 
-export const OrderSummary = ({
-  shippingCost,
-  errorMessage,
-}: {
-  cartToCheckout: CartToCheckout
-  shippingCost?: {
-    currency: Currency
-    value: number
-  }[]
-  errorMessage?: string
-}) => {
+export const OrderSummary = ({ cart, errorMessage }: { cart: Cart; errorMessage?: string }) => {
   // const totalPriceWithShipping = mergeAmounts(cartToCheckout.total, shippingCost)
+  const cartPrice = useMemo(() => calculateCartCost(cart), [cart])
 
   return (
     <div className="mt-10 lg:sticky lg:top-28 lg:mt-0 lg:h-fit">
@@ -52,19 +45,19 @@ export const OrderSummary = ({
           <div className="flex items-center justify-between">
             <dt className="text-sm">Subtotal</dt>
             <dd className="text-sm font-medium text-gray-900">
-              <PriceClient pricing={[{ currency: 'Rs', value: 100 }]} />
+              <PriceClient pricing={[{ currency: 'Rs', value: cartPrice }]} />
             </dd>
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-sm">Shipping</dt>
             <dd className="text-sm font-medium text-gray-900">
-              <PriceClient pricing={shippingCost ?? []} />
+              <PriceClient pricing={[{ currency: 'Rs', value: 0 }]} />
             </dd>
           </div>
           <div className="flex items-center justify-between border-t border-gray-200 pt-6">
             <dt className="text-base font-medium">Total</dt>
             <dd className="text-base font-medium text-gray-900">
-              <PriceClient pricing={[{ currency: 'Rs', value: 10 }]} />
+              <PriceClient pricing={[{ currency: 'Rs', value: cartPrice }]} />
             </dd>
           </div>
         </dl>

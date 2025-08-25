@@ -5,10 +5,10 @@ import { Paths } from '@/lib/url'
 import { useCart } from '@/stores/CartStore'
 import { CartToCheckout } from '@/stores/CartStore/types'
 import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
-import { QuantityInput } from '@/components/(storefront)/QuantityInput'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CartProductList } from './cartProductList'
+import { calculateCartCost } from '@/utilities/cart/syncCart'
 
 type CartContentsProps = {
   toggleCart: () => void
@@ -17,8 +17,8 @@ type CartContentsProps = {
 export function CartContents({ toggleCart }: CartContentsProps) {
   const { cart, setCart } = useCart()
   const { shop } = useShop()
-  const [totalPrice, setTotalPrice] = useState(0)
   const [totalQuantity, setTotalQuantity] = useState(0)
+  const totalPrice = useMemo(() => calculateCartCost(cart), [cart])
 
   const fetchCartContents = useCallback(async () => {
     const fetchedCart = await fetch(Paths.cartProducts(shop.domain), {
@@ -37,7 +37,6 @@ export function CartContents({ toggleCart }: CartContentsProps) {
   useEffect(() => {
     fetchCartContents().then((cartToCheckout) => {
       setCart(cartToCheckout.products)
-      setTotalPrice(cartToCheckout.total)
       setTotalQuantity(cartToCheckout.totalQuantity)
     })
   }, [])

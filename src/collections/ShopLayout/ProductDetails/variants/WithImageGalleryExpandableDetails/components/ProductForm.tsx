@@ -147,13 +147,18 @@ export const ProductForm = ({
     if (quantity < minQuantity) setQuantity(minQuantity)
   }, [maxQuantity, minQuantity])
 
-  const { updateCart, cart } = useCart()
+  const { updateCart, cart, setCart } = useCart()
   const { toggleWishList, wishlist } = useWishList()
   const [overStock, setOverStock] = useState(false)
 
   useEffect(() => {
     setOverStock(false)
   }, [cart, currentVariant])
+
+  const addedInCart = useMemo(
+    () => cart.some((c) => c.id == product.id && c.variant.id == currentVariant.id),
+    [currentVariant, cart],
+  )
 
   // Compute availability of each option value given current partial selections.
   const isValueAvailable = (typeId: string, valueId: string) => {
@@ -235,6 +240,7 @@ export const ProductForm = ({
       <div className="mt-10 grid grid-cols-2 gap-y-4 sm:flex">
         <Button
           type="submit"
+          variant={addedInCart ? 'destructive' : 'default'}
           disabled={!isProductAvailable || overStock}
           className={cn(
             'h-full col-span-2 row-start-2 flex max-w-xs flex-1 items-center justify-center px-8 py-3 text-base font-medium sm:w-full',
@@ -243,16 +249,25 @@ export const ProductForm = ({
           onClick={(e) => {
             e.preventDefault()
             if (!currentVariant) return
-            const currentInCart = cartItem?.quantity ?? 0
-            if (quantity <= maxQuantity - currentInCart) {
-              setOverStock(false)
-              updateCart([convertToCartProduct(product, currentVariant, quantity)])
+
+            if (addedInCart) {
+              setCart(cart.filter((c) => c.id !== product.id && c.variant.id !== currentVariant.id))
             } else {
-              setOverStock(true)
+              const currentInCart = cartItem?.quantity ?? 0
+              if (quantity <= maxQuantity - currentInCart) {
+                setOverStock(false)
+                updateCart([convertToCartProduct(product, currentVariant, quantity)])
+              } else {
+                setOverStock(true)
+              }
             }
           }}
         >
-          {isProductAvailable ? 'Add to Cart' : 'Product Unavailable'}
+          {isProductAvailable
+            ? addedInCart
+              ? 'Remove from Cart'
+              : 'Add to Cart'
+            : 'Product Unavailable'}
         </Button>
 
         <div className="flex">
@@ -261,6 +276,7 @@ export const ProductForm = ({
             minQuantity={minQuantity}
             updateQuantity={(delta) => setQuantity((q) => q + delta)}
             quantity={quantity}
+            disabled={addedInCart}
           />
 
           <button

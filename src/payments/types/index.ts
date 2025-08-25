@@ -104,7 +104,6 @@ export type CheckoutArgs = {
 export type CheckoutSessionCreateData = {
   shop: Shop
   paymentDoc: PaymentProvider
-  checkoutData: CheckoutData
   order: Order
   transaction: Transaction
 }
