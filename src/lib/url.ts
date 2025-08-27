@@ -42,7 +42,7 @@ export const AdminPaths = {
 
   api: {
     login: '/api/auth/login',
-    register: 'api/auth/register',
+    register: '/api/auth/register',
     loginWithoutPrefix: '/auth/login',
     registerWithoutPrefix: '/auth/register',
   },

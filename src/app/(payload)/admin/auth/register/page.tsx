@@ -37,7 +37,7 @@ const Register = () => {
       setIsLoading(true)
       if (!formData.email || !formData.password || !formData.shopName) return
       setIsLoading(true)
-      const res = await fetch(AdminPaths.api.login, {
+      const res = await fetch(AdminPaths.api.register, {
         method: 'POST',
         body: JSON.stringify(formData),
       })
