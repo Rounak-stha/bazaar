@@ -3,10 +3,10 @@ import { cookies } from 'next/headers'
 import { Endpoint } from 'payload'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { RootDomainFormatted } from '@/lib/url'
+import { AdminPaths, RootDomainFormatted } from '@/lib/url'
 
 export const loginUserEndpoint: Endpoint = {
-  path: '/auth/login',
+  path: AdminPaths.api.loginWithoutPrefix,
   method: 'post',
   handler: async (req) => {
     try {

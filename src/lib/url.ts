@@ -34,3 +34,16 @@ export const Paths = {
   orderConfirm: (provider: PaymentProviderName) => `/order/confirm/${provider}`,
   shop: '/shop',
 } as const
+
+export const AdminPaths = {
+  root: '/admin',
+  login: '/admin/auth/login',
+  register: '/admin/auth/register',
+
+  api: {
+    login: '/api/auth/login',
+    register: 'api/auth/register',
+    loginWithoutPrefix: '/auth/login',
+    registerWithoutPrefix: '/auth/register',
+  },
+} as const

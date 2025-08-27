@@ -9,15 +9,19 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { AdminLogoIcon } from '@/components/AdminLogoIcon/AdminLogoIcon'
 import { useRouter } from 'next/navigation'
 import { useRouteTransition } from '@payloadcms/ui'
+import Link from 'next/link'
+import { AdminPaths } from '@/lib/url'
 
 export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
-  const { startRouteTransition } = useRouteTransition()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
+  const [loading, setLoading] = useState(false)
+
+  const { startRouteTransition } = useRouteTransition()
+  const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -28,20 +32,26 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.email || !formData.password) return
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    })
+    try {
+      setLoading(true)
+      if (!formData.email || !formData.password) return
+      const res = await fetch(AdminPaths.api.login, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      })
 
-    const data = await res.json()
+      const data = await res.json()
 
-    if (res.status == 201) {
-      console.log({ data })
-      const redirectUrl = data.redirectUrl
-      if (redirectUrl) {
-        startRouteTransition(() => router.push('/admin'))
+      if (res.status == 201) {
+        const redirectUrl = data.redirectUrl
+        if (redirectUrl) {
+          startRouteTransition(() => router.push(AdminPaths.root))
+        }
+      } else {
+        setLoading(false)
       }
+    } catch {
+      setLoading(false)
     }
   }
 
@@ -75,7 +85,7 @@ export default function AdminLogin() {
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="pl-10 h-11"
+                      className="pl-10 h-12"
                       required
                     />
                   </div>
@@ -95,7 +105,7 @@ export default function AdminLogin() {
                       placeholder="Create a secure password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="pl-10 pr-10 h-11"
+                      className="pl-10 pr-10 h-12"
                       required
                     />
                     <Button
@@ -110,7 +120,7 @@ export default function AdminLogin() {
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit" size="lg" className="w-full box-border">
+                <Button type="submit" size="lg" className="w-full box-border" disabled={loading}>
                   Login
                 </Button>
               </form>
@@ -130,10 +140,13 @@ export default function AdminLogin() {
               {/* Sign In Link */}
               <div className="text-center">
                 <span className="text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <a href="#" className="text-primary hover:underline font-medium">
-                    Sign in
-                  </a>
+                  <span className="mr-1">Create an account</span>
+                  <Link
+                    href={AdminPaths.register}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Register
+                  </Link>
                 </span>
               </div>
             </CardContent>

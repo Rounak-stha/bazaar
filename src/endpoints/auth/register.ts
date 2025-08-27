@@ -3,10 +3,10 @@ import { cookies } from 'next/headers'
 import { Endpoint } from 'payload'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { RootDomainFormatted } from '@/lib/url'
+import { AdminPaths, RootDomainFormatted } from '@/lib/url'
 
 export const registerUserEndpoint: Endpoint = {
-  path: '/auth/register',
+  path: AdminPaths.api.registerWithoutPrefix,
   method: 'post',
   handler: async (req) => {
     const body = await req.json?.()

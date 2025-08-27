@@ -7,6 +7,10 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Eye, EyeOff, Store, Mail, Lock } from 'lucide-react'
 import { AdminLogoIcon } from '@/components/AdminLogoIcon/AdminLogoIcon'
+import Link from 'next/link'
+import { AdminPaths } from '@/lib/url'
+import { useRouteTransition } from '@payloadcms/ui'
+import { useRouter } from 'next/navigation'
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -15,6 +19,10 @@ const Register = () => {
     password: '',
     shopName: '',
   })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const { startRouteTransition } = useRouteTransition()
+  const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -23,15 +31,30 @@ const Register = () => {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.email || !formData.password || !formData.shopName) return
-    fetch('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    })
-      .then(async (res) => await res.json())
-      .then((res) => console.log(res))
+    try {
+      setIsLoading(true)
+      if (!formData.email || !formData.password || !formData.shopName) return
+      setIsLoading(true)
+      const res = await fetch(AdminPaths.api.login, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      })
+
+      const data = await res.json()
+
+      if (res.status == 201) {
+        const redirectUrl = data.redirectUrl
+        if (redirectUrl) {
+          startRouteTransition(() => router.push(AdminPaths.root))
+        }
+      } else {
+        setIsLoading(false)
+      }
+    } catch {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -70,7 +93,7 @@ const Register = () => {
                       placeholder="Your Amazing Store"
                       value={formData.shopName}
                       onChange={handleInputChange}
-                      className="pl-10 h-11 bg-background/50 border-border/50 focus:bg-background focus:border-primary transition-all duration-200"
+                      className="pl-10 h-12"
                       required
                     />
                   </div>
@@ -90,7 +113,7 @@ const Register = () => {
                       placeholder="you@example.com"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="pl-10 h-11 bg-background/50 border-border/50 focus:bg-background focus:border-primary transition-all duration-200"
+                      className="pl-10 h-12"
                       required
                     />
                   </div>
@@ -110,7 +133,7 @@ const Register = () => {
                       placeholder="Create a secure password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="pl-10 pr-10 h-11 bg-background/50 border-border/50 focus:bg-background focus:border-primary transition-all duration-200"
+                      className="pl-10 pr-10 h-12"
                       required
                     />
                     <Button
@@ -125,7 +148,7 @@ const Register = () => {
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit" size="lg" className="w-full">
+                <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                   Create Your Store
                 </Button>
               </form>
@@ -146,9 +169,12 @@ const Register = () => {
               <div className="text-center">
                 <span className="text-sm text-muted-foreground">
                   Already have an account?{' '}
-                  <a href="#" className="text-primary hover:underline font-medium">
+                  <Link
+                    href={AdminPaths.login}
+                    className="text-primary hover:underline font-medium"
+                  >
                     Sign in
-                  </a>
+                  </Link>
                 </span>
               </div>
             </CardContent>
