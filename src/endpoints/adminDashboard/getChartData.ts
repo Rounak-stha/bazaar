@@ -21,11 +21,22 @@ export const getChartData = async (req: PayloadRequest) => {
       return Response.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
+    const shop = req.user.shops && req.user.shops.length > 0 ? req.user.shops[0].shop : undefined
+
+    if (!shop) {
+      return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+
+    const shopId = typeof shop == 'string' ? shop : shop.id
+
     const currentYear = new Date().getFullYear()
     const startDate = startOfYear(new Date(currentYear, 0)).toISOString()
     const endDate = endOfYear(new Date(currentYear, 0)).toISOString()
 
     const whereQuery: Where = {
+      shop: {
+        equals: shopId,
+      },
       createdAt: {
         greater_than_equal: startDate,
         less_than_equal: endDate,

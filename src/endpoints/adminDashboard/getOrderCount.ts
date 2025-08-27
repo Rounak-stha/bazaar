@@ -18,6 +18,14 @@ export const getOrderCount = async (req: PayloadRequest) => {
       return Response.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
+    const shop = req.user.shops && req.user.shops.length > 0 ? req.user.shops[0].shop : undefined
+
+    if (!shop) {
+      return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    }
+
+    const shopId = typeof shop == 'string' ? shop : shop.id
+
     const dates = req.json && ((await req.json()) as { dateFrom?: string; dateTo?: string })
 
     const dateFrom = dates?.dateFrom && new Date(dates.dateFrom).setHours(0, 0, 0, 0)
@@ -91,6 +99,10 @@ export const getOrderCount = async (req: PayloadRequest) => {
           },
         }
       }
+    }
+
+    whereQuery.shop = {
+      equals: shopId,
     }
 
     const { totalDocs } = await payload.find({
