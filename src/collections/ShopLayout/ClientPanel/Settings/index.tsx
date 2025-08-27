@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+/* import { useTranslations } from "next-intl";
 
 import { type Customer } from "@/payload-types";
 
@@ -82,3 +82,4 @@ export const Settings = ({ user }: { user: Customer }) => {
     </div>
   );
 };
+ */

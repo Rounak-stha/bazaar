@@ -1,4 +1,4 @@
-import { LogOutIcon } from "lucide-react";
+/* import { LogOutIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type ReactNode } from "react";
 
@@ -28,3 +28,4 @@ export const WithSidebar = ({ children }: { children: ReactNode }) => {
     </div>
   );
 };
+ */

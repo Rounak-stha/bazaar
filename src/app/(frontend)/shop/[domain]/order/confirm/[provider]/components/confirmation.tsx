@@ -20,8 +20,8 @@ export function OrderConfirmation({ order }: { order: Order | null }) {
         </div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Order Confirmed!</h1>
         <p className="text-muted-foreground text-lg">
-          Thank you for your purchase. We've received your order and will send you a confirmation
-          email shortly.
+          Thank you for your purchase. We&apos;ve received your order and will send you a
+          confirmation email shortly.
         </p>
       </div>
 
@@ -123,14 +123,14 @@ export function OrderConfirmation({ order }: { order: Order | null }) {
       {/* Next Steps */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">What's Next?</CardTitle>
+          <CardTitle className="text-lg">What&apos;s Next?</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-accent">
               <h4 className="font-semibold mb-2">Order Processing</h4>
               <p className="text-sm text-muted-foreground">
-                We'll prepare your order within 1-2 business days.
+                We&apos;ll prepare your order within 1-2 business days.
               </p>
             </div>
             <div className="p-4 rounded-lg bg-accent">

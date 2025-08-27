@@ -1,4 +1,4 @@
-import { render } from "@react-email/components";
+/* import { render } from "@react-email/components";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { VerifyAccountEmail } from "@/components/Emails/VerifyAccountEmail";
@@ -43,3 +43,4 @@ export const createTokenAndSendEmail: CollectionAfterOperationHook<"customers"> 
 
   return result;
 };
+ */

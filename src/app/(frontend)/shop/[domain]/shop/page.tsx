@@ -28,7 +28,7 @@ export default async function ShopPage({ searchParams, params }: ShopPageProps) 
     }
 
     const sortBy = getSoryBy(awaitedSearchParams)
-    let sortQuery: Sort = getSortQuery(awaitedSearchParams)
+    const sortQuery: Sort = getSortQuery(awaitedSearchParams)
     const filterQuery = getFilterQuery(awaitedSearchParams)
     const shopFilters = await getCachedShopFilters(shop.id)()
     const parsedShopFilters = parseShopFilters(awaitedSearchParams, shopFilters)

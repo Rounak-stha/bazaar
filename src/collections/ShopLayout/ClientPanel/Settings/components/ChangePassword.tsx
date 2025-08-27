@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -141,3 +141,4 @@ export const ChangePassword = ({ user }: { user: Customer }) => {
     </>
   );
 };
+ */

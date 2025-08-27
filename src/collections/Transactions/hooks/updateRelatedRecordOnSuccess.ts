@@ -3,7 +3,7 @@ import { CollectionAfterChangeHook } from 'payload'
 
 export const updateRelatedRecordOnSuccess: CollectionAfterChangeHook<Transaction> = (args) => {
   if (args.doc.status === 'failed' && args.previousDoc?.status === 'success') {
-    args.doc
+    return args.doc
   }
 
   if (args.doc.status == 'success') {

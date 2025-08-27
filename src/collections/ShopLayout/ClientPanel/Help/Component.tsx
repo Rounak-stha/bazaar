@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+/* import { getLocale } from "next-intl/server";
 
 import RichText from "@/components/RichText";
 import { type Locale } from "@/i18n/config";
@@ -14,3 +14,4 @@ export const ClientHelp = async () => {
     </div>
   );
 };
+ */

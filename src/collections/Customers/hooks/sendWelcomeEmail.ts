@@ -1,4 +1,4 @@
-import { render } from "@react-email/components";
+/* import { render } from "@react-email/components";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { WelcomeEmail } from "@/components/Emails/WelcomeEmail";
@@ -31,3 +31,4 @@ export const sendWelcomeEmail: CollectionAfterChangeHook<Customer> = async ({ pr
 
   return doc;
 };
+ */

@@ -12,7 +12,7 @@ export const updateAndDeleteAccess: Access = ({ req }) => {
 
   return {
     id: {
-      in: req.user.shop,
+      in: req.user.shops,
     },
   }
 }

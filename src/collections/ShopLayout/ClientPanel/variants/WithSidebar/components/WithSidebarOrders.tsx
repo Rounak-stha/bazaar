@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+/* import { getLocale, getTranslations } from "next-intl/server";
 import { getPayload } from "payload";
 
 import { Media } from "@/components/Media";
@@ -84,3 +84,4 @@ export const WithSidebarOrders = async () => {
     </div>
   );
 };
+ */

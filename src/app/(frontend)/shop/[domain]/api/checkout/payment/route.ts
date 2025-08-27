@@ -56,7 +56,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ domain:
       return Response.json({ error: 'Low Stock', data: checkCartInStockResult }, { status: 400 })
     }
 
-    let order = await payload.create({
+    const order = await payload.create({
       collection: 'orders',
       data: {
         paymentStatus: 'unpaid',

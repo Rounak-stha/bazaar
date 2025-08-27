@@ -16,10 +16,15 @@ import { parseSearchParamsValueAsString } from '@/utilities/searchParams'
 export function createKhaltiSessionArgs(args: CheckoutSessionCreateData): KhaltiSessionArgs {
   const { shop, paymentDoc, order, transaction } = args
   const shopUrl = getShopUrl(shop)
+
+  const liveSecretKey = args.paymentDoc.khalti.config?.liveSecretKey
+
+  if (!liveSecretKey) throw new Error('Khalti Payment not configured')
+
   return {
     name: 'khalti',
     config: {
-      liveSecretKey: paymentDoc.khalti.config?.liveSecretKey!,
+      liveSecretKey: liveSecretKey,
       livePublicKey: paymentDoc.khalti.config?.livePublicKey,
     },
     data: {
@@ -36,10 +41,15 @@ export function createKhaltiLookupArgs(args: LookupArgsCreateData): KhaltiLookup
   // ToDO: Validate the params
   const parsedParams = parseCallbackParams(parseSearchParamsValueAsString(args.params))
 
+  const liveSecretKey = args.paymentDoc.khalti.config?.liveSecretKey
+
+  if (!liveSecretKey) throw new Error('Khalti Payment not configured')
+
   return {
     name: 'khalti',
     config: {
-      liveSecretKey: args.paymentDoc.khalti.config?.liveSecretKey!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element is guaranteed to exist.
+      liveSecretKey: liveSecretKey,
       livePublicKey: args.paymentDoc.khalti.config?.livePublicKey,
     },
     data: parsedParams,

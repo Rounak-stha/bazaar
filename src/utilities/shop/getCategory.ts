@@ -1,4 +1,4 @@
-import type { ProductCategory, Shop } from 'src/payload-types'
+import type { ProductCategory } from 'src/payload-types'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+/* import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { type ReactNode } from "react";
 
@@ -29,3 +29,4 @@ export const ClientPanel = async ({ children }: { children: ReactNode }) => {
     notFound();
   }
 };
+ */

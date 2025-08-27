@@ -18,13 +18,13 @@ export const WithInlinePrice = ({ products }: { products: Product[] }) => {
           if (priceRange?.length === 2) {
             pricingComponent = (
               <>
-                <PriceClient pricing={priceRange[0]} />
+                <PriceClient pricing={priceRange[0][0]} />
                 <span className="mx-1">-</span>
-                <PriceClient pricing={priceRange[1]} />
+                <PriceClient pricing={priceRange[1][0]} />
               </>
             )
           } else if (priceRange?.length === 1) {
-            pricingComponent = <PriceClient pricing={priceRange[0]} />
+            pricingComponent = <PriceClient pricing={priceRange[0][0]} />
           }
 
           return (

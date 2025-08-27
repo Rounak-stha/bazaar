@@ -67,7 +67,7 @@ export function PaymentFailure({
         <Alert className="mb-6 border-warning bg-warning/5">
           <AlertCircle className="h-4 w-4 text-warning" />
           <AlertDescription className="text-foreground">
-            <strong>Don't worry!</strong> If you have any inconviniences, reach out to us.
+            <strong>Don&apos;t worry!</strong> If you have any inconviniences, reach out to us.
           </AlertDescription>
         </Alert>
 

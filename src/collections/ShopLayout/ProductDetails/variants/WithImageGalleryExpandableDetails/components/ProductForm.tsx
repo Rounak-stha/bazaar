@@ -171,7 +171,7 @@ export const ProductForm = ({
     const nextSelections = { ...selections, [typeId]: valueId }
 
     // Prefer in-stock exact match
-    let nextVariant =
+    const nextVariant =
       variants.find((v) => v.stock > 0 && variantMatchesSelections(v, nextSelections)) ??
       // fallback to any exact match (even if out of stock)
       variants.find((v) => variantMatchesSelections(v, nextSelections)) ??
