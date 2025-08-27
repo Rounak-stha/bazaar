@@ -68,19 +68,19 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    addresses: Address;
-    pages: Page;
-    posts: Post;
-    media: Media;
-    categories: Category;
-    customers: Customer;
-    orders: Order;
-    productCategories: ProductCategory;
-    productOptionValues: ProductOptionValue;
-    productOptions: ProductOption;
     products: Product;
-    shops: Shop;
+    pages: Page;
+    productCategories: ProductCategory;
+    orders: Order;
+    productOptions: ProductOption;
+    productOptionValues: ProductOptionValue;
+    media: Media;
     transactions: Transaction;
+    addresses: Address;
+    customers: Customer;
+    posts: Post;
+    categories: Category;
+    shops: Shop;
     users: User;
     header: Header;
     footer: Footer;
@@ -105,19 +105,19 @@ export interface Config {
     };
   };
   collectionsSelect: {
-    addresses: AddressesSelect<false> | AddressesSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
-    posts: PostsSelect<false> | PostsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    customers: CustomersSelect<false> | CustomersSelect<true>;
-    orders: OrdersSelect<false> | OrdersSelect<true>;
-    productCategories: ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
-    productOptionValues: ProductOptionValuesSelect<false> | ProductOptionValuesSelect<true>;
-    productOptions: ProductOptionsSelect<false> | ProductOptionsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
-    shops: ShopsSelect<false> | ShopsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    productCategories: ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    productOptions: ProductOptionsSelect<false> | ProductOptionsSelect<true>;
+    productOptionValues: ProductOptionValuesSelect<false> | ProductOptionValuesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     transactions: TransactionsSelect<false> | TransactionsSelect<true>;
+    addresses: AddressesSelect<false> | AddressesSelect<true>;
+    customers: CustomersSelect<false> | CustomersSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    shops: ShopsSelect<false> | ShopsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
@@ -195,67 +195,202 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "addresses".
+ * via the `definition` "products".
  */
-export interface Address {
+export interface Product {
   id: string;
-  user?: (string | null) | Customer;
-  isDefault?: boolean | null;
-  fullName: string;
-  province: 'Koshi' | 'Madhesh' | 'Bagmati' | 'Gandaki' | 'Lumbini' | 'Karnali' | 'Sudhurpaschim';
-  city: string;
-  street: string;
-  email?: string | null;
-  phone: string;
+  shop?: (string | null) | Shop;
+  title: string;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * If you have variants, first image will be variant image.
+   */
+  images: (string | Media)[];
+  details?:
+    | {
+        title: string;
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  options?:
+    | {
+        type: string | ProductOption;
+        values: (string | ProductOptionValue)[];
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * All product attributes must be set through variants. If the product has only one variant, define it here as the default variant.
+   */
+  variants: {
+    /**
+     * The name of the variant
+     */
+    name: string;
+    /**
+     * Your `Stock Keeping Unit` should be unique across your inventory
+     */
+    sku: string;
+    image?: (string | null) | Media;
+    options?:
+      | {
+          type: string | ProductOption;
+          value: string | ProductOptionValue;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Define stock for this variant. A stock of 0 disables checkout for this variant.
+     */
+    stock: number;
+    pricing: {
+      value: number;
+      currency: string;
+    };
+    id?: string | null;
+  }[];
+  categories?:
+    | {
+        category: string | ProductCategory;
+        id?: string | null;
+      }[]
+    | null;
+  bought: number;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shops".
+ */
+export interface Shop {
+  id: string;
+  name: string;
+  /**
+   * Used for domain-based tenant handling
+   */
+  domain: string;
+  /**
+   * If checked, logging in is not required to read. Useful for building public pages.
+   */
+  allowPublicRead?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "customers".
+ * via the `definition` "media".
  */
-export interface Customer {
+export interface Media {
   id: string;
-  fullName?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  cart?:
-    | {
+  shop?: (string | null) | Shop;
+  alt: string;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
         [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  wishlist?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  _verified?: boolean | null;
-  _verificationToken?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productOptions".
+ */
+export interface ProductOption {
+  id: string;
+  shop?: (string | null) | Shop;
+  name: string;
+  type: 'generic' | 'color' | 'fabric';
+  values?: {
+    docs?: (string | ProductOptionValue)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productOptionValues".
+ */
+export interface ProductOptionValue {
+  id: string;
+  _productOptionValues_values_order?: string | null;
+  shop?: (string | null) | Shop;
+  productOptionType: string | ProductOption;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productCategories".
+ */
+export interface ProductCategory {
+  id: string;
+  shop?: (string | null) | Shop;
+  title: string;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  products?: {
+    docs?: (string | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -326,24 +461,6 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shops".
- */
-export interface Shop {
-  id: string;
-  name: string;
-  /**
-   * Used for domain-based tenant handling
-   */
-  domain: string;
-  /**
-   * If checked, logging in is not required to read. Useful for building public pages.
-   */
-  allowPublicRead?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -389,41 +506,6 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  shop?: (string | null) | Shop;
-  alt: string;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -926,149 +1008,67 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productCategories".
+ * via the `definition` "addresses".
  */
-export interface ProductCategory {
+export interface Address {
   id: string;
-  shop?: (string | null) | Shop;
-  title: string;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  products?: {
-    docs?: (string | Product)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
+  user?: (string | null) | Customer;
+  isDefault?: boolean | null;
+  fullName: string;
+  province: 'Koshi' | 'Madhesh' | 'Bagmati' | 'Gandaki' | 'Lumbini' | 'Karnali' | 'Sudhurpaschim';
+  city: string;
+  street: string;
+  email?: string | null;
+  phone: string;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
+ * via the `definition` "customers".
  */
-export interface Product {
+export interface Customer {
   id: string;
-  shop?: (string | null) | Shop;
-  title: string;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
+  fullName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  cart?:
+    | {
         [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * If you have variants, first image will be variant image.
-   */
-  images: (string | Media)[];
-  details?:
-    | {
-        title: string;
-        content: {
-          root: {
-            type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        };
-        id?: string | null;
-      }[]
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
-  options?:
+  wishlist?:
     | {
-        type: string | ProductOption;
-        values: (string | ProductOptionValue)[];
-        id?: string | null;
-      }[]
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
-  /**
-   * All product attributes must be set through variants. If the product has only one variant, define it here as the default variant.
-   */
-  variants: {
-    /**
-     * The name of the variant
-     */
-    name: string;
-    /**
-     * Your `Stock Keeping Unit` should be unique across your inventory
-     */
-    sku: string;
-    image?: (string | null) | Media;
-    options?:
-      | {
-          type: string | ProductOption;
-          value: string | ProductOptionValue;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Define stock for this variant. A stock of 0 disables checkout for this variant.
-     */
-    stock: number;
-    pricing: {
-      value: number;
-      currency: string;
-    };
-    id?: string | null;
-  }[];
-  categories?:
-    | {
-        category: string | ProductCategory;
-        id?: string | null;
-      }[]
-    | null;
-  bought: number;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productOptions".
- */
-export interface ProductOption {
-  id: string;
-  shop?: (string | null) | Shop;
-  name: string;
-  type: 'generic' | 'color' | 'fabric';
-  values?: {
-    docs?: (string | ProductOptionValue)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productOptionValues".
- */
-export interface ProductOptionValue {
-  id: string;
-  _productOptionValues_values_order?: string | null;
-  shop?: (string | null) | Shop;
-  productOptionType: string | ProductOption;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1414,56 +1414,56 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'addresses';
-        value: string | Address;
+        relationTo: 'products';
+        value: string | Product;
       } | null)
     | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
     | ({
-        relationTo: 'posts';
-        value: string | Post;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: string | Media;
-      } | null)
-    | ({
-        relationTo: 'categories';
-        value: string | Category;
-      } | null)
-    | ({
-        relationTo: 'customers';
-        value: string | Customer;
+        relationTo: 'productCategories';
+        value: string | ProductCategory;
       } | null)
     | ({
         relationTo: 'orders';
         value: string | Order;
       } | null)
     | ({
-        relationTo: 'productCategories';
-        value: string | ProductCategory;
+        relationTo: 'productOptions';
+        value: string | ProductOption;
       } | null)
     | ({
         relationTo: 'productOptionValues';
         value: string | ProductOptionValue;
       } | null)
     | ({
-        relationTo: 'productOptions';
-        value: string | ProductOption;
-      } | null)
-    | ({
-        relationTo: 'products';
-        value: string | Product;
-      } | null)
-    | ({
-        relationTo: 'shops';
-        value: string | Shop;
+        relationTo: 'media';
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'transactions';
         value: string | Transaction;
+      } | null)
+    | ({
+        relationTo: 'addresses';
+        value: string | Address;
+      } | null)
+    | ({
+        relationTo: 'customers';
+        value: string | Customer;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: string | Post;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: string | Category;
+      } | null)
+    | ({
+        relationTo: 'shops';
+        value: string | Shop;
       } | null)
     | ({
         relationTo: 'users';
@@ -1563,19 +1563,61 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "addresses_select".
+ * via the `definition` "products_select".
  */
-export interface AddressesSelect<T extends boolean = true> {
-  user?: T;
-  isDefault?: T;
-  fullName?: T;
-  province?: T;
-  city?: T;
-  street?: T;
-  email?: T;
-  phone?: T;
+export interface ProductsSelect<T extends boolean = true> {
+  shop?: T;
+  title?: T;
+  slug?: T;
+  slugLock?: T;
+  description?: T;
+  images?: T;
+  details?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  options?:
+    | T
+    | {
+        type?: T;
+        values?: T;
+        id?: T;
+      };
+  variants?:
+    | T
+    | {
+        name?: T;
+        sku?: T;
+        image?: T;
+        options?:
+          | T
+          | {
+              type?: T;
+              value?: T;
+              id?: T;
+            };
+        stock?: T;
+        pricing?:
+          | T
+          | {
+              value?: T;
+              currency?: T;
+            };
+        id?: T;
+      };
+  categories?:
+    | T
+    | {
+        category?: T;
+        id?: T;
+      };
+  bought?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1748,105 +1790,16 @@ export interface FormBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts_select".
+ * via the `definition` "productCategories_select".
  */
-export interface PostsSelect<T extends boolean = true> {
-  shop?: T;
-  title?: T;
-  heroImage?: T;
-  content?: T;
-  relatedPosts?: T;
-  categories?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        image?: T;
-        description?: T;
-      };
-  publishedAt?: T;
-  authors?: T;
-  populatedAuthors?:
-    | T
-    | {
-        id?: T;
-        name?: T;
-      };
-  slug?: T;
-  slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  shop?: T;
-  alt?: T;
-  caption?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
+export interface ProductCategoriesSelect<T extends boolean = true> {
   shop?: T;
   title?: T;
   slug?: T;
   slugLock?: T;
-  parent?: T;
-  breadcrumbs?:
-    | T
-    | {
-        doc?: T;
-        url?: T;
-        label?: T;
-        id?: T;
-      };
+  products?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "customers_select".
- */
-export interface CustomersSelect<T extends boolean = true> {
-  fullName?: T;
-  firstName?: T;
-  lastName?: T;
-  cart?: T;
-  wishlist?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  _verified?: T;
-  _verificationToken?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1902,14 +1855,13 @@ export interface OrdersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productCategories_select".
+ * via the `definition` "productOptions_select".
  */
-export interface ProductCategoriesSelect<T extends boolean = true> {
+export interface ProductOptionsSelect<T extends boolean = true> {
   shop?: T;
-  title?: T;
-  slug?: T;
-  slugLock?: T;
-  products?: T;
+  name?: T;
+  type?: T;
+  values?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1927,84 +1879,23 @@ export interface ProductOptionValuesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "productOptions_select".
+ * via the `definition` "media_select".
  */
-export interface ProductOptionsSelect<T extends boolean = true> {
+export interface MediaSelect<T extends boolean = true> {
   shop?: T;
-  name?: T;
-  type?: T;
-  values?: T;
+  alt?: T;
+  caption?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products_select".
- */
-export interface ProductsSelect<T extends boolean = true> {
-  shop?: T;
-  title?: T;
-  slug?: T;
-  slugLock?: T;
-  description?: T;
-  images?: T;
-  details?:
-    | T
-    | {
-        title?: T;
-        content?: T;
-        id?: T;
-      };
-  options?:
-    | T
-    | {
-        type?: T;
-        values?: T;
-        id?: T;
-      };
-  variants?:
-    | T
-    | {
-        name?: T;
-        sku?: T;
-        image?: T;
-        options?:
-          | T
-          | {
-              type?: T;
-              value?: T;
-              id?: T;
-            };
-        stock?: T;
-        pricing?:
-          | T
-          | {
-              value?: T;
-              currency?: T;
-            };
-        id?: T;
-      };
-  categories?:
-    | T
-    | {
-        category?: T;
-        id?: T;
-      };
-  bought?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shops_select".
- */
-export interface ShopsSelect<T extends boolean = true> {
-  name?: T;
-  domain?: T;
-  allowPublicRead?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2020,6 +1911,115 @@ export interface TransactionsSelect<T extends boolean = true> {
   metadata?: T;
   user?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "addresses_select".
+ */
+export interface AddressesSelect<T extends boolean = true> {
+  user?: T;
+  isDefault?: T;
+  fullName?: T;
+  province?: T;
+  city?: T;
+  street?: T;
+  email?: T;
+  phone?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers_select".
+ */
+export interface CustomersSelect<T extends boolean = true> {
+  fullName?: T;
+  firstName?: T;
+  lastName?: T;
+  cart?: T;
+  wishlist?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  shop?: T;
+  title?: T;
+  heroImage?: T;
+  content?: T;
+  relatedPosts?: T;
+  categories?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  authors?: T;
+  populatedAuthors?:
+    | T
+    | {
+        id?: T;
+        name?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  shop?: T;
+  title?: T;
+  slug?: T;
+  slugLock?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shops_select".
+ */
+export interface ShopsSelect<T extends boolean = true> {
+  name?: T;
+  domain?: T;
+  allowPublicRead?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2435,16 +2435,16 @@ export interface TaskSchedulePublish {
     locale?: string | null;
     doc?:
       | ({
+          relationTo: 'products';
+          value: string | Product;
+        } | null)
+      | ({
           relationTo: 'pages';
           value: string | Page;
         } | null)
       | ({
           relationTo: 'posts';
           value: string | Post;
-        } | null)
-      | ({
-          relationTo: 'products';
-          value: string | Product;
         } | null);
     global?: string | null;
     user?: (string | null) | User;
