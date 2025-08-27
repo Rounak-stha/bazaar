@@ -15,7 +15,7 @@ import { parseSearchParamsValueAsString } from '@/utilities/searchParams'
 
 export function createKhaltiSessionArgs(args: CheckoutSessionCreateData): KhaltiSessionArgs {
   const { shop, paymentDoc, order, transaction } = args
-  const shopUrl = getShopUrl(shop)
+  const shopUrl = getShopUrl(shop.domain)
 
   const liveSecretKey = args.paymentDoc.khalti.config?.liveSecretKey
 

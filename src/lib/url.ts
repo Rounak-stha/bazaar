@@ -1,4 +1,3 @@
-import { Shop } from '@/payload-types'
 import type { NextRequest } from 'next/server'
 import { isDevelopment } from './isdevelopment'
 import { PaymentProviderName } from '@/payments/types'
@@ -18,7 +17,7 @@ export const RootDomainFormatted = (() => {
   return host
 })()
 
-export const getShopUrl = (shop: Shop) => `${protocol}://${shop.domain}.${RootDomainFormatted}`
+export const getShopUrl = (domain: string) => `${protocol}://${domain}.${RootDomainFormatted}`
 
 /**
  * Method adapted from: https://github.com/vercel/platforms/blob/main/middleware.ts
