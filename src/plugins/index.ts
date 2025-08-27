@@ -48,6 +48,9 @@ export const plugins: Plugin[] = [
           return field
         })
       },
+      admin: {
+        hidden: true,
+      },
       hooks: {
         afterChange: [revalidateRedirects],
       },
@@ -64,6 +67,11 @@ export const plugins: Plugin[] = [
   formBuilderPlugin({
     fields: {
       payment: false,
+    },
+    formSubmissionOverrides: {
+      admin: {
+        hidden: true,
+      },
     },
     formOverrides: {
       fields: ({ defaultFields }) => {
@@ -84,6 +92,9 @@ export const plugins: Plugin[] = [
           }
           return field
         })
+      },
+      admin: {
+        hidden: true,
       },
     },
   }),
@@ -113,6 +124,9 @@ export const plugins: Plugin[] = [
     searchOverrides: {
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
+      },
+      admin: {
+        hidden: true,
       },
     },
   }),

@@ -12,6 +12,7 @@ export const PaymentProviders: CollectionConfig = {
   admin: {
     useAsTitle: 'id',
     hideAPIURL: true,
+    group: 'Shop Settings',
   },
   access: {
     read: () => true,

@@ -4,6 +4,10 @@ import { anyone } from '@/access/anyone'
 
 export const ProductOptionValues: CollectionConfig = {
   slug: 'productOptionValues',
+  labels: {
+    singular: 'Product Option Value',
+    plural: 'Product Option Values',
+  },
   access: {
     create: superAdminOrTenantAdminAccess,
     delete: superAdminOrTenantAdminAccess,
@@ -13,6 +17,7 @@ export const ProductOptionValues: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name'],
+    hidden: true,
   },
   hooks: {
     beforeDelete: [

@@ -4,6 +4,10 @@ import { updateRelatedRecordOnSuccess } from './hooks/updateRelatedRecordOnSucce
 
 export const Transactions: CollectionConfig = {
   slug: 'transactions',
+  labels: {
+    singular: 'Transaction',
+    plural: 'Transactions',
+  },
   access: {
     read: superAdminOrTenantAdminAccess,
     create: () => false,
@@ -12,7 +16,7 @@ export const Transactions: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'id',
-    defaultColumns: ['id', 'tenant', 'provider', 'amount', 'currency', 'status'],
+    defaultColumns: ['id', 'order', 'status', 'provider', 'currency', 'amount'],
   },
   hooks: {
     afterChange: [updateRelatedRecordOnSuccess],

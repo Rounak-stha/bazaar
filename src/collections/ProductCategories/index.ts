@@ -6,6 +6,10 @@ import { superAdminOrTenantAdminAccess } from '@/access/superAdminOrTenantAdmin'
 
 export const ProductCategories: CollectionConfig = {
   slug: 'productCategories',
+  labels: {
+    singular: 'Product Category',
+    plural: 'Product Categories',
+  },
   admin: {
     useAsTitle: 'title',
   },

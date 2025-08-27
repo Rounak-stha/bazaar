@@ -5,6 +5,10 @@ import { deleteChildOptionValues } from './hooks/deleteChildOptionValues'
 
 export const ProductOptions: CollectionConfig = {
   slug: 'productOptions',
+  labels: {
+    singular: 'Product Option',
+    plural: 'Product Options',
+  },
   access: {
     create: superAdminOrTenantAdminAccess,
     delete: superAdminOrTenantAdminAccess,

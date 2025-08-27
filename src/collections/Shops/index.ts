@@ -17,6 +17,7 @@ export const Shops: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
+    hidden: true,
   },
   fields: [
     {

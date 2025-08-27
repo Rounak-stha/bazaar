@@ -40,11 +40,15 @@ export default buildConfig({
         // Displayed above the Nav in admin panel
         Icon: '@/components/AdminLogoIcon/AdminLogoIcon#AdminLogoIcon',
       },
+      Nav: {
+        path: '@/components/AdminNavbar#AdminNavbar',
+      },
       views: {
         dashboard: {
           Component: '@/components/AdminDashboard#AdminDashboard',
         },
       },
+      beforeNavLinks: ['@/components/AdminNavbar/NavHeader#AdminNavHeader'],
     },
     importMap: {
       baseDir: path.resolve(dirname),

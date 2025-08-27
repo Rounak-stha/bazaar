@@ -7,13 +7,14 @@ export const Customers: CollectionConfig = {
     create: () => true,
   },
   labels: {
-    singular: 'Customer',
-    plural: 'Customers list',
+    singular: 'Customer List',
+    plural: 'Customers Lists',
   },
   admin: {
     group: 'Clients',
     defaultColumns: ['fullName', 'email', 'createdAt', 'updatedAt'],
     useAsTitle: 'fullName',
+    hidden: true,
   },
   auth: {
     maxLoginAttempts: 30,

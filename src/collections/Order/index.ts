@@ -12,6 +12,10 @@ import { pricingField } from '@/fields/pricing'
 
 export const Order: CollectionConfig = {
   slug: 'orders',
+  labels: {
+    singular: 'Order',
+    plural: 'Orders',
+  },
   access: {
     create: anyone,
     // update: not sure what to do here as unauthenticated user can create an order
@@ -21,7 +25,14 @@ export const Order: CollectionConfig = {
   admin: {
     useAsTitle: 'id',
     hideAPIURL: true,
-    defaultColumns: ['id', 'customer', 'shippingAddress.province'],
+    defaultColumns: [
+      'id',
+      'shippingAddress.province',
+      'shippingAddress.fullName',
+      'items',
+      'status',
+      'total',
+    ],
   },
   endpoints: [
     {
@@ -40,10 +51,6 @@ export const Order: CollectionConfig = {
       handler: getChartData,
     },
   ],
-  labels: {
-    singular: 'Order',
-    plural: 'Orders',
-  },
   hooks: {
     beforeValidate: [snapshotOrderItems],
   },

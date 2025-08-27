@@ -7,6 +7,10 @@ import { ensureSingleShop } from './hooks/ensureSingleShop'
 
 export const Users: CollectionConfig = {
   slug: 'users',
+  labels: {
+    singular: 'User',
+    plural: 'Users',
+  },
   access: {
     admin: authenticated,
     create: authenticated,

@@ -7,7 +7,11 @@ import { revalidateHeader } from './hooks/revalidateHeader'
 export const Header: CollectionConfig = {
   slug: HeaderSlug,
   labels: {
-    singular: 'header',
+    singular: 'Header',
+    plural: 'Header',
+  },
+  admin: {
+    group: 'Shop Settings',
   },
   access: {
     read: () => true,

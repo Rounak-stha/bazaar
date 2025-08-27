@@ -6,15 +6,15 @@ import { revalidateShopSettings } from './hooks/revalidateShopSettings'
 export const ShopSettings: CollectionConfig = {
   slug: ShopSettingsSlug,
   labels: {
-    singular: 'General',
-    plural: 'General',
+    singular: 'Shop Setting',
+    plural: 'Shop Settings',
   },
   access: {
     read: () => true,
   },
   admin: {
     hideAPIURL: true,
-    group: 'Shop settings',
+    group: 'Shop Settings',
   },
   fields: [
     {

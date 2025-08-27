@@ -7,7 +7,11 @@ import { revalidateFooter } from './hooks/revalidateFooter'
 export const Footer: CollectionConfig = {
   slug: FooterSlug,
   labels: {
-    singular: 'footer',
+    singular: 'Footer',
+    plural: 'Footer',
+  },
+  admin: {
+    group: 'Shop Settings',
   },
   access: {
     read: () => true,

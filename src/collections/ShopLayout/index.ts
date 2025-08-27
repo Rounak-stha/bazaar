@@ -28,7 +28,7 @@ export const ShopLayout: CollectionConfig = {
     read: () => true,
   },
   admin: {
-    group: 'Shop settings',
+    group: 'Shop Settings',
   },
   fields: [
     {
