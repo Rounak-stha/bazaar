@@ -120,4 +120,8 @@ const queryPageBySlug = unstable_cache(
 
     return result.docs?.[0] || null
   },
+  [],
+  {
+    revalidate: false,
+  },
 )
