@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
@@ -82,39 +83,41 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   return generateMeta({ doc: page })
 }
 
-const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: string }) => {
-  const payload = await getPayload({ config: configPromise })
+const queryPageBySlug = unstable_cache(
+  async ({ slug, domain }: { slug: string; domain: string }) => {
+    const payload = await getPayload({ config: configPromise })
 
-  const paginatedShopData = await payload.find({
-    collection: 'shops',
-    where: {
-      domain: {
-        equals: domain,
+    const paginatedShopData = await payload.find({
+      collection: 'shops',
+      where: {
+        domain: {
+          equals: domain,
+        },
       },
-    },
-  })
+    })
 
-  if (paginatedShopData.docs.length == 0) return null
+    if (paginatedShopData.docs.length == 0) return null
 
-  const result = await payload.find({
-    collection: 'pages',
-    limit: 1,
-    pagination: false,
-    where: {
-      and: [
-        {
-          slug: {
-            equals: slug,
+    const result = await payload.find({
+      collection: 'pages',
+      limit: 1,
+      pagination: false,
+      where: {
+        and: [
+          {
+            slug: {
+              equals: slug,
+            },
           },
-        },
-        {
-          shop: {
-            equals: paginatedShopData.docs[0].id,
+          {
+            shop: {
+              equals: paginatedShopData.docs[0].id,
+            },
           },
-        },
-      ],
-    },
-  })
+        ],
+      },
+    })
 
-  return result.docs?.[0] || null
-})
+    return result.docs?.[0] || null
+  },
+)
