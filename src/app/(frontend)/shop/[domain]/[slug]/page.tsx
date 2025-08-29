@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
-import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -44,7 +43,6 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { domain, slug = 'home' } = await paramsPromise
   const url = '/' + slug
 
@@ -65,7 +63,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
-      {draft && <LivePreviewListener />}
+      {/*draft && <LivePreviewListener /> */}
 
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
@@ -84,8 +82,6 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: string }) => {
-  const { isEnabled: draft } = await draftMode()
-
   const payload = await getPayload({ config: configPromise })
 
   const paginatedShopData = await payload.find({
@@ -101,10 +97,8 @@ const queryPageBySlug = cache(async ({ slug, domain }: { slug: string; domain: s
 
   const result = await payload.find({
     collection: 'pages',
-    draft,
     limit: 1,
     pagination: false,
-    overrideAccess: draft,
     where: {
       and: [
         {
