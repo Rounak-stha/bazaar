@@ -58,7 +58,6 @@ export const Transactions: CollectionConfig = {
         { label: 'Failed', value: 'failed' },
         { label: 'Refunded', value: 'refunded' },
         { label: 'Expired', value: 'expired' },
-        { label: 'Failed', value: 'failed' },
         { label: 'User Cancelled', value: 'user_cancelled' },
       ],
       index: true,
