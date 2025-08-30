@@ -109,6 +109,7 @@ export default function AdminLogin() {
                       required
                     />
                     <Button
+                      type="button"
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowPassword(!showPassword)}
