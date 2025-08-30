@@ -26,7 +26,6 @@
     "@headlessui/react": "^2.2.7",
     "@hookform/resolvers": "^5.2.1",
     "@payloadcms/admin-bar": "3.50.0",
-    "@payloadcms/db-mongodb": "3.50.0",
     "@payloadcms/db-postgres": "3.50.0",
     "@payloadcms/db-vercel-postgres": "3.50.0",
     "@payloadcms/live-preview-react": "3.50.0",

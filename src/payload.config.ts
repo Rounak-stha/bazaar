@@ -1,5 +1,4 @@
 // storage-adapter-import-placeholder
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 
 import sharp from 'sharp' // sharp-import
@@ -96,15 +95,9 @@ export default buildConfig({
   endpoints: [loginUserEndpoint, registerUserEndpoint],
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: vercelPostgresAdapter(),
-  /* db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
-    transactionOptions: {
-      readPreference: 'primary',
-      readConcern: { level: 'local' },
-      writeConcern: { w: 'majority' },
-    },
-  }), */
+  db: vercelPostgresAdapter({
+    idType: 'uuid',
+  }),
   collections: [
     Products,
     Pages,
