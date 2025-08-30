@@ -157,9 +157,11 @@ const config = {
             {
               h1: {
                 fontSize: '2.5rem',
+                marginBottom: '0.25em',
               },
               h2: {
                 fontSize: '1.75rem',
+                marginBottom: '0.25em',
               },
             },
           ],
