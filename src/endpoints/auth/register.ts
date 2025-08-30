@@ -48,8 +48,6 @@ export const registerUserEndpoint: Endpoint = {
       req,
     })
 
-    console.log({ loginResult })
-
     if (loginResult.token) {
       const cookieStore = await cookies()
       cookieStore.set({
