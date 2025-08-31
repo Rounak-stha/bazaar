@@ -13,7 +13,6 @@ import { getCachedShopByDomain } from '@/utilities/shop/getShop'
 import type { Page } from '@/payload-types'
 import { getCachedPage } from '@/utilities/shop/getPage'
 
-export const revalidate = Infinity
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
@@ -75,8 +74,6 @@ export default async function Page({ params: paramsPromise }: Args) {
   if (!page) {
     return <PayloadRedirects url={url} />
   }
-
-  console.log({ layouts: JSON.stringify(page.hero, null, 2) })
 
   const { hero, layout } = page
 
