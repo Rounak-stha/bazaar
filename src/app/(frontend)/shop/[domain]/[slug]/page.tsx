@@ -13,7 +13,8 @@ import { getCachedShopByDomain } from '@/utilities/shop/getShop'
 import type { Page } from '@/payload-types'
 import { getCachedPage } from '@/utilities/shop/getPage'
 
-export const revalidate = false
+export const revalidate = Infinity
+export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
