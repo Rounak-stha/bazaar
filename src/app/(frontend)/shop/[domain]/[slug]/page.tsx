@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { unstable_cache } from 'next/cache'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
@@ -10,29 +9,45 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
+import { getCachedShopByDomain } from '@/utilities/shop/getShop'
+import type { Page } from '@/payload-types'
+import { getCachedPage } from '@/utilities/shop/getPage'
 
 export const revalidate = false
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'pages',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
+
+  const params: { domain: string; slug: string }[] = []
+
+  const paginatedShopData = await payload.find({
+    collection: 'shops',
     select: {
-      slug: true,
+      domain: true,
     },
+    limit: 1000,
   })
 
-  const params = pages.docs
-    ?.filter((doc) => {
-      return doc.slug !== 'home'
+  if (paginatedShopData.totalDocs == 0) return params
+
+  for (const shop of paginatedShopData.docs) {
+    const paginatedShopPages = await payload.find({
+      collection: 'pages',
+      draft: false,
+      limit: 10,
+      overrideAccess: false,
+      pagination: false,
+      select: {
+        slug: true,
+      },
     })
-    .map(({ slug }) => {
-      return { slug }
-    })
+
+    if (paginatedShopPages.totalDocs > 0) {
+      paginatedShopPages.docs.forEach(
+        (p) => p.slug && params.push({ domain: shop.domain, slug: p.slug }),
+      )
+    }
+  }
 
   return params
 }
@@ -48,14 +63,19 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { domain, slug = 'home' } = await paramsPromise
   const url = '/' + slug
 
-  const page = await queryPageBySlug({
-    slug,
-    domain,
-  })
+  let page: Page | null = null
+
+  const shop = await getCachedShopByDomain(domain)()
+
+  if (shop) {
+    page = await getCachedPage(slug, shop.id)()
+  }
 
   if (!page) {
     return <PayloadRedirects url={url} />
   }
+
+  console.log({ layouts: JSON.stringify(page.hero, null, 2) })
 
   const { hero, layout } = page
 
@@ -75,53 +95,14 @@ export default async function Page({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = 'home', domain } = await paramsPromise
-  const page = await queryPageBySlug({
-    slug,
-    domain,
-  })
+
+  let page: Page | null = null
+
+  const shop = await getCachedShopByDomain(domain)()
+
+  if (shop) {
+    page = await getCachedPage(slug, shop.id)()
+  }
 
   return generateMeta({ doc: page })
 }
-
-const queryPageBySlug = unstable_cache(
-  async ({ slug, domain }: { slug: string; domain: string }) => {
-    const payload = await getPayload({ config: configPromise })
-
-    const paginatedShopData = await payload.find({
-      collection: 'shops',
-      where: {
-        domain: {
-          equals: domain,
-        },
-      },
-    })
-
-    if (paginatedShopData.docs.length == 0) return null
-
-    const result = await payload.find({
-      collection: 'pages',
-      limit: 1,
-      pagination: false,
-      where: {
-        and: [
-          {
-            slug: {
-              equals: slug,
-            },
-          },
-          {
-            shop: {
-              equals: paginatedShopData.docs[0].id,
-            },
-          },
-        ],
-      },
-    })
-
-    return result.docs?.[0] || null
-  },
-  [],
-  {
-    revalidate: false,
-  },
-)

@@ -19,6 +19,9 @@ export const RootDomainFormatted = (() => {
 
 export const getShopUrl = (domain: string) => `${protocol}://${domain}.${RootDomainFormatted}`
 
+export const getPagepathForSlug = (shopDomain: string, pageSlug: string) =>
+  `/shop/${shopDomain}/${pageSlug}`
+
 /**
  * Method adapted from: https://github.com/vercel/platforms/blob/main/middleware.ts
  */
